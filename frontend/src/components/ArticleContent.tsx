@@ -18,18 +18,19 @@ export function ArticleContent({ chunks, activeIndex, highlightedIndex, onSenten
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-      <div className="space-y-1">
-        {chunks.map((chunk, index) => (
+    <article className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+      <p className="text-lg text-gray-800 leading-relaxed tracking-normal">
+        {chunks.map((chunk, index) => [
           <SentenceLine
             key={chunk.id}
             text={chunk.text}
             isActive={activeIndex === index}
             isHighlighted={highlightedIndex === index}
             onClick={() => onSentenceClick(index)}
-          />
-        ))}
-      </div>
-    </div>
+          />,
+          index < chunks.length - 1 ? ' ' : null,
+        ])}
+      </p>
+    </article>
   );
 }
