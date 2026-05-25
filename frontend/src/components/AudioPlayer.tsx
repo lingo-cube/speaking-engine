@@ -18,60 +18,67 @@ export function AudioPlayer({ audioUrl }: AudioPlayerProps) {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="flex items-center gap-2">
-      <button
-        type="button"
-        onClick={isPlaying ? pause : play}
-        className="w-10 h-10 flex items-center justify-center rounded-full bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-200 flex-shrink-0 cursor-pointer"
-        aria-label={isPlaying ? 'Pause' : 'Play'}
-      >
-        {isPlaying ? (
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="6" y="4" width="4" height="16" rx="1" />
-            <rect x="14" y="4" width="4" height="16" rx="1" />
+    <div className="flex flex-col gap-2">
+      {/* Main controls row */}
+      <div className="flex items-center gap-3">
+        {/* Play/Pause */}
+        <button
+          type="button"
+          onClick={isPlaying ? pause : play}
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-200 flex-shrink-0 cursor-pointer shadow-sm"
+          aria-label={isPlaying ? 'Pause' : 'Play'}
+        >
+          {isPlaying ? (
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" rx="1" />
+              <rect x="14" y="4" width="4" height="16" rx="1" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6,4 20,12 6,20" />
+            </svg>
+          )}
+        </button>
+
+        {/* Replay */}
+        <button
+          type="button"
+          onClick={replay}
+          className="w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200 flex-shrink-0 cursor-pointer"
+          aria-label="Replay"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="1,4 1,10 7,10" />
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
           </svg>
-        ) : (
-          <svg className="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="6,4 20,12 6,20" />
-          </svg>
-        )}
-      </button>
+        </button>
 
-      <button
-        type="button"
-        onClick={replay}
-        className="w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200 flex-shrink-0 cursor-pointer"
-        aria-label="Replay"
-      >
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <polyline points="1,4 1,10 7,10" />
-          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-        </svg>
-      </button>
+        {/* Speed toggle */}
+        <button
+          type="button"
+          onClick={toggleSlowMode}
+          className={`text-sm font-semibold px-3 py-1.5 rounded-full border transition-all duration-200 flex-shrink-0 cursor-pointer
+            ${isSlowMode
+              ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
+              : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300 hover:text-gray-700'
+            }`}
+          aria-label={isSlowMode ? 'Normal speed' : 'Slow mode'}
+        >
+          {isSlowMode ? '0.75x' : '1x'}
+        </button>
 
-      <button
-        type="button"
-        onClick={toggleSlowMode}
-        className={`text-xs font-medium px-2.5 py-1 rounded-full border transition-all duration-200 flex-shrink-0 cursor-pointer
-          ${isSlowMode
-            ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
-            : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300 hover:text-gray-600'
-          }`}
-        aria-label={isSlowMode ? 'Normal speed' : 'Slow mode'}
-      >
-        {isSlowMode ? '0.75x' : '1x'}
-      </button>
+        {/* Time */}
+        <span className="text-sm text-gray-400 tabular-nums ml-auto">
+          {formatTime(currentTime)}
+        </span>
+      </div>
 
-      <div className="flex-1 min-w-0">
-        <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-indigo-400 rounded-full transition-all duration-150"
-            style={{ width: `${Math.min(progress, 100)}%` }}
-          />
-        </div>
-        <div className="text-xs text-gray-400 mt-0.5 text-right">
-          {formatTime(currentTime)} / {formatTime(duration)}
-        </div>
+      {/* Progress bar */}
+      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-indigo-400 rounded-full transition-all duration-150"
+          style={{ width: `${Math.min(progress, 100)}%` }}
+        />
       </div>
     </div>
   );

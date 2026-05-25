@@ -21,32 +21,45 @@ export function TrainingDrawer({ chunk, isOpen, onClose }: TrainingDrawerProps) 
 
       {/* Drawer */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-40 bg-white rounded-t-2xl shadow-lg
+        className={`fixed bottom-0 left-0 right-0 z-40 bg-white rounded-t-2xl shadow-xl
           transition-transform duration-200 ease-out
           ${isOpen ? 'translate-y-0' : 'translate-y-full'}`}
-        style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 20px)' }}
       >
         {chunk && (
-          <div className="px-4 pt-4 pb-2">
+          <div className="px-5 pt-5 pb-5">
             {/* Handle */}
-            <div className="flex justify-center mb-3">
+            <div className="flex justify-center mb-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="w-8 h-1 bg-gray-300 rounded-full cursor-pointer"
+                className="w-10 h-1.5 bg-gray-300 rounded-full cursor-pointer hover:bg-gray-400 transition-colors"
                 aria-label="Close training drawer"
               />
             </div>
 
-            {/* Sentence preview */}
-            <p className="text-sm text-gray-600 mb-3 px-1 line-clamp-2">
+            {/* Sentence text — full, readable */}
+            <p className="text-base sm:text-lg text-gray-800 leading-relaxed mb-5 px-1">
               {chunk.text}
             </p>
 
-            {/* Controls */}
-            <div className="flex items-center gap-4 justify-center">
-              <AudioPlayer audioUrl={chunk.audio_url} />
-              <RecordButton />
+            {/* Controls — two clearly separated sections */}
+            <div className="space-y-5">
+              {/* Listen section */}
+              <div className="bg-gray-50 rounded-xl px-4 py-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                  Listen
+                </p>
+                <AudioPlayer audioUrl={chunk.audio_url} />
+              </div>
+
+              {/* Record section */}
+              <div className="bg-gray-50 rounded-xl px-4 py-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                  Shadow
+                </p>
+                <RecordButton />
+              </div>
             </div>
           </div>
         )}
