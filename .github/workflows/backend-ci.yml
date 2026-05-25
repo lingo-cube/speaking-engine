@@ -1,3 +1,5 @@
+# Backend CI — Go lint, build, test
+# Triggers on any Go file change in a PR or push to main
 name: Backend CI
 
 on:
@@ -7,12 +9,14 @@ on:
       - '**.go'
       - 'go.mod'
       - 'go.sum'
+      - '.github/workflows/backend-ci.yml'
   pull_request:
     branches: [main]
     paths:
       - '**.go'
       - 'go.mod'
       - 'go.sum'
+      - '.github/workflows/backend-ci.yml'
 
 jobs:
   build:

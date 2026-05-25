@@ -1,4 +1,6 @@
-name: Deploy Frontend to GitHub Pages
+# Frontend CI/CD — ESLint, TypeScript check, Vite build, deploy to GitHub Pages
+# Deploys only on push to main; PRs get lint + typecheck + build
+name: Frontend CI / Deploy
 
 on:
   push:
