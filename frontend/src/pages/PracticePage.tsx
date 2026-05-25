@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getQuestionsByTopicCode, getAnswerByQuestionId, getTopicByCode } from '../mock/data';
 import type { Question } from '../types';
 import { QuestionCard } from '../components/QuestionCard';
-import { ShadowingPanel } from '../components/ShadowingPanel';
+import { ArticleView } from '../components/ArticleView';
 
 export function PracticePage() {
   const { topicCode } = useParams<{ topicCode: string }>();
@@ -72,7 +72,7 @@ export function PracticePage() {
             {selectedQuestion ? (
               <div className="space-y-6">
                 <QuestionCard question={selectedQuestion} />
-                <ShadowingPanel chunks={answer?.chunks ?? []} />
+                <ArticleView chunks={answer?.chunks ?? []} />
               </div>
             ) : (
               <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
