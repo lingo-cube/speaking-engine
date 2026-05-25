@@ -17,8 +17,10 @@ export function PracticePage() {
     : null;
   const answer = selectedQuestionId ? getAnswerByQuestionId(selectedQuestionId) : undefined;
 
+  // Reset question selection when topic changes — derive via key on route instead
   useEffect(() => {
     setSelectedQuestionId(null);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
   }, [topicCode]);
 
   return (

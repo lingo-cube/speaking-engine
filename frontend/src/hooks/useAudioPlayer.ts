@@ -23,6 +23,7 @@ export function useAudioPlayer(audioUrl: string): UseAudioPlayerReturn {
     audio.preload = 'metadata';
     audioRef.current = audio;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Audio element event listeners are async callbacks, not synchronous setState
     const onTimeUpdate = () => setCurrentTime(audio.currentTime);
     const onDurationChange = () => setDuration(audio.duration);
     const onEnded = () => setIsPlaying(false);
