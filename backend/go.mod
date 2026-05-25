@@ -1,4 +1,4 @@
-module github.com/lingo-cube/speaking-engine
+module github.com/lingo-cube/speaking-engine/backend
 
 go 1.21
 

@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lingo-cube/speaking-engine/internal/model"
-	"github.com/lingo-cube/speaking-engine/internal/repository"
+	"github.com/lingo-cube/speaking-engine/backend/internal/model"
+	"github.com/lingo-cube/speaking-engine/backend/internal/repository"
 )
 
 type AnswerService struct {

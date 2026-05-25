@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lingo-cube/speaking-engine/internal/storage"
+	"github.com/lingo-cube/speaking-engine/backend/internal/storage"
 )
 
 type AudioService struct {

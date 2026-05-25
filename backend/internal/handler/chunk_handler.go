@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lingo-cube/speaking-engine/internal/middleware"
-	"github.com/lingo-cube/speaking-engine/internal/service"
+	"github.com/lingo-cube/speaking-engine/backend/internal/middleware"
+	"github.com/lingo-cube/speaking-engine/backend/internal/service"
 )
 
 type ChunkHandler struct {

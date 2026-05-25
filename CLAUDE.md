@@ -10,16 +10,16 @@ This repository contains **two separate projects** with clear boundaries:
 
 |                    | Backend                        | Frontend                          |
 | ------------------ | ------------------------------ | --------------------------------- |
-| **Directory**      | `./` (root)                    | `./frontend/`                     |
+| **Directory**      | `./backend/`                   | `./frontend/`                     |
 | **Language**       | Go 1.21+                       | TypeScript 5 + React 18           |
 | **Framework**      | Gin + GORM                     | Vite + TailwindCSS 4              |
 | **Database**       | MySQL                          | None (mock data at dev time)      |
-| **Package manager** | Go modules (`go.mod`)         | npm (`frontend/package.json`)     |
-| **Dev server**     | `go run cmd/main.go`           | `npm run dev`                     |
-| **Build**          | `go build ./...`               | `npm run build`                   |
-| **Lint**           | `go vet ./...`                 | `npm run lint`                    |
-| **Type check**     | `go vet ./...`                 | `npx tsc --noEmit`                |
-| **Test**           | `go test ./...`                | —                                 |
+| **Package manager** | Go modules (`backend/go.mod`) | npm (`frontend/package.json`)     |
+| **Dev server**     | `cd backend && go run cmd/main.go` | `cd frontend && npm run dev`  |
+| **Build**          | `cd backend && go build ./...` | `cd frontend && npm run build`    |
+| **Lint**           | `cd backend && go vet ./...`   | `cd frontend && npm run lint`     |
+| **Type check**     | `cd backend && go vet ./...`   | `cd frontend && npx tsc --noEmit` |
+| **Test**           | `cd backend && go test ./...`  | —                                 |
 
 **The frontend is fully self-contained.** It uses mock data from `frontend/src/mock/data.ts` and does not require the backend to run. The backend serves the REST API independently.
 
@@ -94,9 +94,11 @@ main (production)
 
 ## Development
 
-### Backend (`./`)
+### Backend (`./backend/`)
 
 ```bash
+cd backend
+
 # Run with mock storage (no MySQL needed for dev)
 STORAGE_PROVIDER=mock go run cmd/main.go
 
@@ -160,7 +162,7 @@ The frontend uses mock data by default. All pages and components work without a 
 ```
 speaking-engine/
 │
-├── Backend (Go) ────────────────────────────
+├── backend/                     # Go backend — independent project
 │   ├── cmd/main.go              # Entry point
 │   ├── internal/
 │   │   ├── config/              # Viper config (env vars)
@@ -173,34 +175,33 @@ speaking-engine/
 │   ├── seeds/                   # Sample IELTS data
 │   ├── go.mod / go.sum
 │
-├── Frontend (React) ─────────────────────────
-│   ├── frontend/
-│   │   ├── src/
-│   │   │   ├── components/      # 8 reusable components
-│   │   │   │   ├── AudioPlayer.tsx
-│   │   │   │   ├── ChunkCard.tsx
-│   │   │   │   ├── FrameworkTag.tsx
-│   │   │   │   ├── QuestionCard.tsx
-│   │   │   │   ├── RecordButton.tsx
-│   │   │   │   ├── ShadowingPanel.tsx
-│   │   │   │   ├── TopicCard.tsx
-│   │   │   │   └── TypeTag.tsx
-│   │   │   ├── hooks/           # useAudioPlayer, useRecorder
-│   │   │   ├── mock/            # Mock data (15 questions with answers)
-│   │   │   ├── pages/           # TopicListPage, PracticePage
-│   │   │   ├── types/           # TypeScript interfaces
-│   │   │   ├── App.tsx          # React Router setup
-│   │   │   └── main.tsx         # Entry point
-│   │   ├── package.json
-│   │   ├── vite.config.ts
-│   │   └── tsconfig.json
+├── frontend/                    # React frontend — independent project
+│   ├── src/
+│   │   ├── components/          # 8 reusable components
+│   │   │   ├── AudioPlayer.tsx
+│   │   │   ├── ChunkCard.tsx
+│   │   │   ├── FrameworkTag.tsx
+│   │   │   ├── QuestionCard.tsx
+│   │   │   ├── RecordButton.tsx
+│   │   │   ├── ShadowingPanel.tsx
+│   │   │   ├── TopicCard.tsx
+│   │   │   └── TypeTag.tsx
+│   │   ├── hooks/               # useAudioPlayer, useRecorder
+│   │   ├── mock/                # Mock data (15 questions with answers)
+│   │   ├── pages/               # TopicListPage, PracticePage
+│   │   ├── types/               # TypeScript interfaces
+│   │   ├── App.tsx              # React Router setup
+│   │   └── main.tsx             # Entry point
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── tsconfig.json
 │
-├── Shared ───────────────────────────────────
-│   ├── .github/workflows/       # CI/CD pipeline definitions
-│   │   ├── backend-ci.yml       # Backend: lint, build, test
-│   │   └── deploy.yml           # Frontend: lint, check, build, deploy
-│   ├── openspec/                # Specs, design, tasks (spec-driven workflow)
-│   └── PRD.md                   # Product requirements
+├── .github/workflows/           # CI/CD pipelines
+│   ├── backend-ci.yml           # Backend: lint, build, test
+│   └── deploy.yml               # Frontend: lint, check, build, deploy
+├── openspec/                    # Specs, design, tasks
+├── PRD.md                       # Product requirements
+└── CLAUDE.md                    # This file
 ```
 
 ---

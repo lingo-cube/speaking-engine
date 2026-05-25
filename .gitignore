@@ -12,6 +12,9 @@ frontend/dist/
 bin/
 dist/
 
+# Claude
+.claude/
+
 # IDE
 .idea/
 .vscode/

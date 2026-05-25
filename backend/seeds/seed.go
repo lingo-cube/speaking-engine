@@ -3,7 +3,7 @@ package seeds
 import (
 	"log"
 
-	"github.com/lingo-cube/speaking-engine/internal/model"
+	"github.com/lingo-cube/speaking-engine/backend/internal/model"
 	"gorm.io/gorm"
 )
 

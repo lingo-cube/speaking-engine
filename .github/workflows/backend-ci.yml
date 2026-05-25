@@ -1,26 +1,25 @@
 # Backend CI — Go lint, build, test
-# Triggers on any Go file change in a PR or push to main
+# Triggers on any Go file change in the backend/ project
 name: Backend CI
 
 on:
   push:
     branches: [main]
     paths:
-      - '**.go'
-      - 'go.mod'
-      - 'go.sum'
+      - 'backend/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     branches: [main]
     paths:
-      - '**.go'
-      - 'go.mod'
-      - 'go.sum'
+      - 'backend/**'
       - '.github/workflows/backend-ci.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,12 +28,14 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.21'
+          cache-dependency-path: backend/go.sum
 
       - name: Lint
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
           args: --timeout=5m
+          working-directory: backend
         continue-on-error: true
 
       - name: Build
