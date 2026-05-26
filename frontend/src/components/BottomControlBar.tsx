@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useFullAudioPlayer } from '../hooks/useFullAudioPlayer';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { useRecorder } from '../hooks/useRecorder';
@@ -40,16 +40,20 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
   // Recording
   const recorder = useRecorder();
 
-  // Auto-transition: full playback ends → enter training mode with first sentence
-  const wasFullPlayingRef = useRef(false);
+  // Track if user initiated full playback (for auto-transition detection)
+  const [hasStartedFull, setHasStartedFull] = useState(false);
+  // Reset flag when entering training mode (user selected a sentence manually)
   useEffect(() => {
-    const wasPlaying = wasFullPlayingRef.current;
-    wasFullPlayingRef.current = fullAudio.isPlaying;
-    // Full playback just ended naturally (was playing → now stopped, and in reading mode)
-    if (wasPlaying && !fullAudio.isPlaying && fullAudio.currentIndex === -1 && selectedChunk === null && fullAudio.totalCount > 0) {
+    if (selectedChunk !== null) setHasStartedFull(false);
+  }, [selectedChunk]);
+
+  // Auto-transition: full playback ends → enter training mode with first sentence
+  useEffect(() => {
+    if (hasStartedFull && !fullAudio.isPlaying && fullAudio.currentIndex === -1 && selectedChunk === null && fullAudio.totalCount > 0) {
       onSelectSentence(0);
+      setHasStartedFull(false);
     }
-  }, [fullAudio.isPlaying, fullAudio.currentIndex, selectedChunk, fullAudio.totalCount, onSelectSentence]);
+  }, [hasStartedFull, fullAudio.isPlaying, fullAudio.currentIndex, selectedChunk, fullAudio.totalCount, onSelectSentence]);
 
   // Mutual exclusion
   const handleFullToggle = useCallback(() => {
@@ -57,6 +61,7 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
       fullAudio.pause();
     } else {
       if (sentenceAudio.isPlaying) sentenceAudio.pause();
+      setHasStartedFull(true);
       fullAudio.play();
     }
   }, [fullAudio, sentenceAudio]);
