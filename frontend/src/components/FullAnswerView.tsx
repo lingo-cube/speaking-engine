@@ -113,8 +113,8 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
         <h1 className="text-[28px] sm:text-[40px] font-extrabold text-gray-900 leading-[1.2] mb-12 tracking-tight text-center" style={{ textShadow: '0 2px 12px rgba(88,204,2,0.15)' }}>
           {question.question}
         </h1>
-        {/* Sample answer card — subtle green accent */}
-        <div className="relative pl-5 border-l-[4px] border-primary/20 rounded-r-xl bg-gradient-to-r from-primary/[0.03] to-transparent py-2">
+        {/* Sample answer card — matching chunk card style */}
+        <div className="bg-white rounded-3xl border-2 border-primary/15 shadow-lg shadow-primary/5 px-6 sm:px-10 py-8 sm:py-10">
           <div className="space-y-[32px]">
             {paras.map((para, pi) => (
               <p key={pi} className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal" style={{ textIndent: '2em' }}>
