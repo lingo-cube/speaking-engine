@@ -11,7 +11,9 @@ const spring = { type: 'spring' as const, stiffness: 400, damping: 30 };
 function Sentence({ text, active }: { text: string; active: boolean }) {
   return (
     <span className={`inline transition-all duration-500 rounded-sm px-0.5
-      ${active ? 'bg-primary/10 text-primary font-semibold shadow-[0_0_12px_rgba(88,204,2,0.18)]' : ''}`}
+      ${active
+        ? 'bg-primary/10 text-primary font-semibold shadow-[0_0_12px_rgba(88,204,2,0.18)]'
+        : 'border-b border-dotted border-gray-200 hover:border-primary/30'}`}
     >
       {text}
     </span>
@@ -113,15 +115,18 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
         <h1 className="text-[28px] sm:text-[40px] font-extrabold text-gray-900 leading-[1.2] mb-12 tracking-tight text-center" style={{ textShadow: '0 2px 12px rgba(88,204,2,0.15)' }}>
           {question.question}
         </h1>
-        <div className="space-y-[32px]">
-          {paras.map((para, pi) => (
-            <p key={pi} className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal" style={{ textIndent: '2em' }}>
-              {para.map((chunk) => {
-                const i = idx++; const active = isPlaying && i === currentChunk;
-                return <Sentence key={chunk.id} text={chunk.text} active={active} />;
-              }).reduce((prev, curr, i) => (i === 0 ? <>{prev}{curr}</> : <>{prev} {curr}</>))}
-            </p>
-          ))}
+        {/* Sample answer card — subtle green accent */}
+        <div className="relative pl-5 border-l-[4px] border-primary/20 rounded-r-xl bg-gradient-to-r from-primary/[0.03] to-transparent py-2">
+          <div className="space-y-[32px]">
+            {paras.map((para, pi) => (
+              <p key={pi} className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal" style={{ textIndent: '2em' }}>
+                {para.map((chunk) => {
+                  const i = idx++; const active = isPlaying && i === currentChunk;
+                  return <Sentence key={chunk.id} text={chunk.text} active={active} />;
+                }).reduce((prev, curr, i) => (i === 0 ? <>{prev}{curr}</> : <>{prev} {curr}</>))}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
 
