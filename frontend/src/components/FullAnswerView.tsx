@@ -8,10 +8,17 @@ const spring = { type: 'spring' as const, stiffness: 400, damping: 30 };
 
 // ── Animated Sentence ──────────────────────────────────────
 
-function Sentence({ text, active }: { text: string; active: boolean }) {
+function Sentence({ text, active, onClick }: { text: string; active: boolean; onClick: () => void }) {
   return (
-    <span className={`inline transition-all duration-500 rounded-sm
-      ${active ? 'bg-primary/10 text-primary font-semibold shadow-[0_0_12px_rgba(88,204,2,0.18)]' : ''}`}
+    <span
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => { if (e.key === 'Enter') { onClick(); }}}
+      className={`inline cursor-pointer transition-all duration-500 rounded-sm
+        ${active
+          ? 'bg-primary/10 text-primary font-semibold shadow-[0_0_12px_rgba(88,204,2,0.18)]'
+          : 'hover:bg-primary/5 hover:text-primary'}`}
     >
       {text}
     </span>
@@ -120,7 +127,13 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
               <p key={pi} className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal" style={{ textIndent: '2em' }}>
                 {para.map((chunk) => {
                   const i = idx++; const active = isPlaying && i === currentChunk;
-                  return <Sentence key={chunk.id} text={chunk.text} active={active} />;
+                  return <Sentence key={chunk.id} text={chunk.text} active={active} onClick={() => {
+                    window.speechSynthesis.cancel();
+                    if (isPlaying) setIsPlaying(false);
+                    const u = new SpeechSynthesisUtterance(chunk.text);
+                    u.rate = 1;
+                    window.speechSynthesis.speak(u);
+                  }} />;
                 }).reduce((prev, curr, i) => (i === 0 ? <>{prev}{curr}</> : <>{prev} {curr}</>))}
               </p>
             ))}
