@@ -1,112 +1,108 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import type { ApiChunk, ApiQuestion } from '../types';
 import { TypeTag } from './TypeTag';
 import { FrameworkTag } from './FrameworkTag';
-import { useSmartAudio } from '../hooks/useSmartAudio';
 
-// ── Circular Audio Player ──────────────────────────────────
+const spring = { type: 'spring' as const, stiffness: 400, damping: 30 };
+
+// ── Circular Player ────────────────────────────────────────
 
 function CircularPlayer({ isPlaying, progress, isComplete, onToggle }: {
-  isPlaying: boolean;
-  progress: number;
-  isComplete: boolean;
-  onToggle: () => void;
+  isPlaying: boolean; progress: number; isComplete: boolean; onToggle: () => void;
 }) {
-  const radius = 42;
+  const radius = 46;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - Math.min(progress, 1));
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      {/* Listen First label */}
+    <div className="flex flex-col items-center gap-3">
       {!isPlaying && !isComplete && (
-        <p className="text-sm text-gray-400 font-semibold">Tap to listen</p>
+        <motion.p
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-sm font-bold text-gray-400"
+        >
+          Tap to listen
+        </motion.p>
+      )}
+      {isPlaying && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-xs font-bold text-primary uppercase tracking-wider"
+        >
+          Listening...
+        </motion.p>
+      )}
+      {isComplete && (
+        <motion.p
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={spring}
+          className="text-sm font-extrabold text-green-500"
+        >
+          Ready to practice!
+        </motion.p>
       )}
 
-      <div className="relative w-24 h-24 flex items-center justify-center">
-        {/* Progress ring */}
-        {(isPlaying || isComplete) && (
+      <div className="relative w-28 h-28 flex items-center justify-center">
+        {isPlaying && (
           <svg className="absolute inset-0 w-full h-full -rotate-90">
-            <circle cx="48" cy="48" r={radius} fill="none" stroke="#e5e7eb" strokeWidth="2" />
-            <circle
-              cx="48" cy="48" r={radius} fill="none"
-              stroke={isComplete ? '#22c55e' : 'var(--theme-primary, #4F46E5)'}
-              strokeWidth="2"
+            <circle cx="56" cy="56" r={radius} fill="none" stroke="#e5e7eb" strokeWidth="3" />
+            <circle cx="56" cy="56" r={radius} fill="none"
+              stroke="var(--theme-primary, #58CC02)" strokeWidth="3"
               strokeDasharray={circumference}
-              strokeDashoffset={isComplete ? 0 : offset}
+              strokeDashoffset={circumference * (1 - Math.min(progress, 1))}
               strokeLinecap="round"
               className="transition-[stroke-dashoffset] duration-500 ease-out"
             />
           </svg>
         )}
+        {isComplete && (
+          <svg className="absolute inset-0 w-full h-full -rotate-90">
+            <circle cx="56" cy="56" r={radius} fill="none" stroke="#22c55e" strokeWidth="3"
+              strokeDasharray={circumference} strokeDashoffset={0} strokeLinecap="round" />
+          </svg>
+        )}
 
-        {/* Button */}
-        <button
-          type="button"
+        <motion.button
+          whileTap={{ scale: 0.88 }}
           onClick={onToggle}
-          className="w-20 h-20 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 active:scale-90 cursor-pointer shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-0.5 z-10"
-          aria-label={isPlaying ? 'Pause' : isComplete ? 'Completed' : 'Play full answer'}
+          className={`w-24 h-24 flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer z-10 border-[4px]
+            ${isComplete
+              ? 'bg-green-500 border-green-600 text-white shadow-xl shadow-green-500/30'
+              : isPlaying
+                ? 'bg-primary border-primary-hover text-white shadow-xl shadow-primary/30'
+                : 'bg-white border-gray-200 text-primary hover:border-primary/30 hover:shadow-lg'
+            }`}
+          aria-label={isPlaying ? 'Pause' : isComplete ? 'Done' : 'Play'}
         >
           {isComplete ? (
-            <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <motion.svg
+              initial={{ scale: 0, rotate: -90 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={spring}
+              className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+            >
               <polyline points="20,6 9,17 4,12" />
-            </svg>
+            </motion.svg>
           ) : isPlaying ? (
-            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" />
-            </svg>
+            <svg className="w-9 h-9" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>
           ) : (
-            <svg className="w-7 h-7 ml-1" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="6,4 20,12 6,20" />
-            </svg>
+            <svg className="w-9 h-9 ml-1.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="7,4 22,12 7,20"/></svg>
           )}
-        </button>
+        </motion.button>
       </div>
-
-      {/* Time display */}
-      {isPlaying && (
-        <p className="text-xs text-gray-400 tabular-nums">00:00</p>
-      )}
     </div>
   );
 }
 
 // ── Inline Sentence ────────────────────────────────────────
 
-function InlineSentence({ chunk, isPlaying, onClick, onPlayEnd }: {
-  chunk: ApiChunk;
-  isPlaying: boolean;
-  onClick: () => void;
-  onPlayEnd: () => void;
-}) {
-  const { play } = useSmartAudio(chunk.audio_url, chunk.text);
-  const prevPlaying = useRef(false);
-
-  useEffect(() => {
-    if (!isPlaying && prevPlaying.current) {
-      onPlayEnd();
-    }
-    prevPlaying.current = isPlaying;
-  }, [isPlaying]);
-
-  const handleClick = useCallback(() => {
-    play();
-    onClick();
-  }, [play, onClick]);
-
+function InlineSentence({ chunk, active }: { chunk: ApiChunk; active: boolean }) {
   return (
-    <span
-      role="button"
-      tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={(e) => { if (e.key === 'Enter') { handleClick(); }}}
-      className={`inline cursor-pointer transition-all duration-500 rounded-sm
-        ${isPlaying
-          ? 'bg-primary/8 shadow-[0_0_12px_rgba(79,70,229,0.15)] px-0.5'
-          : 'hover:bg-primary/5 hover:shadow-[0_0_6px_rgba(79,70,229,0.08)]'
-        }`}
-    >
+    <span className={`inline transition-all duration-500 rounded-sm
+      ${active ? 'bg-primary/10 shadow-[0_0_16px_rgba(88,204,2,0.15)] px-0.5' : ''}`}>
       {chunk.text}
     </span>
   );
@@ -114,147 +110,89 @@ function InlineSentence({ chunk, isPlaying, onClick, onPlayEnd }: {
 
 // ── Full Answer View ───────────────────────────────────────
 
-interface FullAnswerViewProps {
-  question: ApiQuestion;
-  chunks: ApiChunk[];
-  onStartShadowing?: () => void;
-}
+interface FullAnswerViewProps { question: ApiQuestion; chunks: ApiChunk[]; onStartShadowing?: () => void; }
 
 export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswerViewProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentChunk, setCurrentChunk] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const totalChunks = chunks.length;
-  const progress = totalChunks > 0 ? (currentChunk) / totalChunks : 0;
+  const progress = totalChunks > 0 ? currentChunk / totalChunks : 0;
 
-  // TTS sequential playback
   const playNextChunk = useCallback((index: number) => {
-    if (index >= totalChunks) {
-      setIsPlaying(false);
-      setIsComplete(true);
-      setCurrentChunk(totalChunks);
-      return;
-    }
+    if (index >= totalChunks) { setIsPlaying(false); setIsComplete(true); setCurrentChunk(totalChunks); return; }
     setCurrentChunk(index);
-    const chunk = chunks[index];
-    const utterance = new SpeechSynthesisUtterance(chunk.text);
-    utterance.rate = 1;
-    utterance.onend = () => {
-      playNextChunk(index + 1);
-    };
-    utterance.onerror = () => {
-      playNextChunk(index + 1);
-    };
+    const u = new SpeechSynthesisUtterance(chunks[index].text);
+    u.rate = 1;
+    u.onend = () => playNextChunk(index + 1);
+    u.onerror = () => playNextChunk(index + 1);
     window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
+    window.speechSynthesis.speak(u);
   }, [chunks, totalChunks]);
 
   const handleToggle = useCallback(() => {
-    if (isPlaying) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
-      setIsComplete(false);
-    } else {
-      setIsPlaying(true);
-      setIsComplete(false);
-      setCurrentChunk(0);
-      playNextChunk(0);
-    }
+    if (isPlaying) { window.speechSynthesis.cancel(); setIsPlaying(false); setIsComplete(false); }
+    else { setIsPlaying(true); setIsComplete(false); setCurrentChunk(0); playNextChunk(0); }
   }, [isPlaying, playNextChunk]);
 
-  // Stop TTS on unmount
-  useEffect(() => {
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, []);
+  useEffect(() => { return () => { window.speechSynthesis.cancel(); }; }, []);
 
-  // Group into paragraphs
   const paragraphMap = new Map<number, ApiChunk[]>();
-  for (const chunk of chunks) {
-    const p = chunk.paragraph ?? 1;
-    if (!paragraphMap.has(p)) paragraphMap.set(p, []);
-    paragraphMap.get(p)!.push(chunk);
-  }
-  const sortedParagraphs = Array.from(paragraphMap.entries())
-    .sort(([a], [b]) => a - b)
-    .map(([, value]) => value);
-
-  // Flatten chunk index tracking
+  for (const c of chunks) { const p = c.paragraph ?? 1; if (!paragraphMap.has(p)) paragraphMap.set(p, []); paragraphMap.get(p)!.push(c); }
+  const sorted = Array.from(paragraphMap.entries()).sort(([a], [b]) => a - b).map(([, v]) => v);
   let flatIdx = 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3 }}
-      className="px-6 sm:px-8 pb-48 pt-8"
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}
+      className="px-6 sm:px-8 pb-56 pt-8"
     >
       <div className="max-w-[720px] mx-auto">
-        {/* Framework Tags */}
+        {/* Tags + Question */}
         <div className="flex flex-wrap items-center gap-2 mb-8">
           <TypeTag type={question.type} />
           <FrameworkTag framework={question.framework} />
         </div>
-
-        {/* Question — large, bold */}
-        <h1 className="text-[32px] sm:text-[48px] font-bold text-gray-900 leading-[1.2] mb-12 tracking-tight">
+        <h1 className="text-[32px] sm:text-[48px] font-extrabold text-gray-900 leading-[1.15] mb-12 tracking-tight">
           {question.question}
         </h1>
 
         {/* Article */}
         <div className="space-y-[32px]">
-          {sortedParagraphs.map((paraChunks, pi) => (
-            <p key={pi}
-              className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal"
-            >
-              {paraChunks.map((chunk) => {
+          {sorted.map((para, pi) => (
+            <p key={pi} className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal">
+              {para.map((chunk) => {
                 const idx = flatIdx++;
-                const playing = isPlaying && idx === currentChunk;
-                return (
-                  <InlineSentence
-                    key={chunk.id}
-                    chunk={chunk}
-                    isPlaying={playing}
-                    onClick={() => {
-                      window.speechSynthesis.cancel();
-                      setIsPlaying(false);
-                      setCurrentChunk(idx);
-                    }}
-                    onPlayEnd={() => { }}
-                  />
-                );
-              }).reduce((prev, curr, i) => (
-                i === 0 ? <>{prev}{curr}</> : <>{prev} {curr}</>
-              ))}
+                const active = isPlaying && idx === currentChunk;
+                return <InlineSentence key={chunk.id} chunk={chunk} active={active} />;
+              }).reduce((p, c, i) => (i === 0 ? <>{p}{c}</> : <>{p} {c}</>))}
             </p>
           ))}
         </div>
       </div>
 
-      {/* Fixed Bottom Player */}
-      <div className="fixed bottom-0 left-0 right-0 flex flex-col items-center pb-8" style={{ paddingBottom: 'env(safe-area-inset-bottom, 32px)' }}>
-        <CircularPlayer
-          isPlaying={isPlaying}
-          progress={progress}
-          isComplete={isComplete}
-          onToggle={handleToggle}
-        />
+      {/* Player — fixed bottom */}
+      <div className="fixed bottom-0 left-0 right-0 flex flex-col items-center pb-10" style={{ paddingBottom: 'env(safe-area-inset-bottom, 32px)' }}>
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, ...spring }}
+          className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-gray-200 px-8 py-6 flex flex-col items-center gap-2 border border-gray-100"
+        >
+          <CircularPlayer isPlaying={isPlaying} progress={progress} isComplete={isComplete} onToggle={handleToggle} />
 
-        {/* Shadowing CTA */}
-        {isComplete && onStartShadowing && (
-          <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            type="button"
-            onClick={onStartShadowing}
-            className="mt-4 px-6 py-3 rounded-2xl bg-primary text-white text-[15px] font-bold hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
-          >
-            Start Shadowing
-          </motion.button>
-        )}
+          {isComplete && onStartShadowing && (
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, ...spring }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onStartShadowing}
+              className="mt-2 px-8 py-3.5 rounded-2xl bg-primary text-white text-[16px] font-extrabold hover:bg-primary-hover transition-colors cursor-pointer shadow-lg shadow-primary/20 border-b-[3px] border-primary-hover active:border-b-0 active:mt-[5px]"
+            >
+              Start Shadowing
+            </motion.button>
+          )}
+        </motion.div>
       </div>
     </motion.div>
   );
