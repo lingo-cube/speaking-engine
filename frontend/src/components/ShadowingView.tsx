@@ -72,7 +72,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
         <AnimatePresence mode="wait">
           {celebrating ? (
             <motion.div key="celebrate" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={bounce}
@@ -121,7 +121,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
 
       {/* Controls */}
       {!celebrating && (
-        <div className="px-6 pb-8 max-w-sm mx-auto w-full space-y-5">
+        <div className="px-6 pt-6 pb-8 max-w-sm mx-auto w-full space-y-5">
           {/* Two big buttons */}
           <div className="flex items-center justify-center gap-6">
             {/* Listen */}
