@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useFullAudioPlayer } from '../hooks/useFullAudioPlayer';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { useRecorder } from '../hooks/useRecorder';
@@ -41,11 +41,15 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
   const recorder = useRecorder();
 
   // Auto-transition: full playback ends → enter training mode with first sentence
+  const wasFullPlayingRef = useRef(false);
   useEffect(() => {
-    if (!fullAudio.isPlaying && fullAudio.currentIndex === -1 && fullAudio.totalCount > 0) {
-      // Full playback just ended (was playing, now stopped, currentIndex reset to -1)
+    const wasPlaying = wasFullPlayingRef.current;
+    wasFullPlayingRef.current = fullAudio.isPlaying;
+    // Full playback just ended naturally (was playing → now stopped, and in reading mode)
+    if (wasPlaying && !fullAudio.isPlaying && fullAudio.currentIndex === -1 && selectedChunk === null && fullAudio.totalCount > 0) {
+      onSelectSentence(0);
     }
-  }, [fullAudio.isPlaying, fullAudio.currentIndex, fullAudio.totalCount, onSelectSentence]);
+  }, [fullAudio.isPlaying, fullAudio.currentIndex, selectedChunk, fullAudio.totalCount, onSelectSentence]);
 
   // Mutual exclusion
   const handleFullToggle = useCallback(() => {
@@ -84,12 +88,13 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
   const isSentencePlaying = sentenceAudio.isPlaying;
   const isFullPlaying = fullAudio.isPlaying;
 
-  // Progress for full playback ring
+  // Progress for full playback ring (sentence-level)
   const fullProgress = fullAudio.totalCount > 0 && fullAudio.currentIndex >= 0
     ? (fullAudio.currentIndex + 1) / fullAudio.totalCount
-    : 0;
-  const fullCurrentTime = formatTime(0); // Per-sentence time not tracked at full level
-  const fullDuration = formatTime(0);
+    : fullAudio.isPlaying ? 0.01 : 0; // ring starts visible when playing
+  const fullCurrentTime = formatTime(fullAudio.elapsedSeconds);
+  // Rough estimate: 5s per sentence (matching mock audio)
+  const fullDuration = formatTime(fullAudio.totalCount * 5);
 
   return (
     <div

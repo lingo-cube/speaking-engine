@@ -1,6 +1,7 @@
 import type { ApiTopic, ApiQuestion, AnswerWithChunks } from '../types/api';
+import { getMockAudioUrl } from './audio';
 
-const MOCK_AUDIO = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+const MOCK_AUDIO = getMockAudioUrl();
 
 export const mockTopics: ApiTopic[] = [
   { id: 1, code: 'hometown', category: 'ielts', name: 'Hometown', created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },

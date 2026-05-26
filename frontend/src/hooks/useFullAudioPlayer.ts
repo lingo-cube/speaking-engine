@@ -6,13 +6,16 @@ interface UseFullAudioPlayerReturn {
   isPlaying: boolean;
   currentIndex: number;
   totalCount: number;
+  elapsedSeconds: number;
   setOnIndexChange: (cb: ((index: number) => void) | null) => void;
 }
 
 export function useFullAudioPlayer(urls: string[]): UseFullAudioPlayerReturn {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(-1);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const currentIndexRef = useRef(-1);
   const urlsRef = useRef(urls);
   const onIndexChangeRef = useRef<((index: number) => void) | null>(null);
@@ -24,12 +27,27 @@ export function useFullAudioPlayer(urls: string[]): UseFullAudioPlayerReturn {
     onIndexChangeRef.current = cb;
   }, []);
 
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const startTimer = useCallback(() => {
+    clearTimer();
+    timerRef.current = setInterval(() => {
+      setElapsedSeconds(prev => prev + 1);
+    }, 1000);
+  }, [clearTimer]);
+
   const stopAudio = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
     }
-  }, []);
+    clearTimer();
+  }, [clearTimer]);
 
   const playIndex = useCallback((index: number) => {
     const filtered = urlsRef.current.filter(Boolean);
@@ -37,6 +55,7 @@ export function useFullAudioPlayer(urls: string[]): UseFullAudioPlayerReturn {
       setIsPlaying(false);
       setCurrentIndex(-1);
       currentIndexRef.current = -1;
+      clearTimer();
       onIndexChangeRef.current?.(-1);
       return;
     }
@@ -57,7 +76,7 @@ export function useFullAudioPlayer(urls: string[]): UseFullAudioPlayerReturn {
       // Autoplay prevented, skip to next
       playIndex(index + 1);
     });
-  }, []);
+  }, [clearTimer]);
 
   const play = useCallback(() => {
     isStoppedRef.current = false;
@@ -65,11 +84,14 @@ export function useFullAudioPlayer(urls: string[]): UseFullAudioPlayerReturn {
       // Resume from paused state
       audioRef.current.play().catch(() => {});
       setIsPlaying(true);
+      startTimer();
     } else {
       setIsPlaying(true);
+      setElapsedSeconds(0);
+      startTimer();
       playIndex(0);
     }
-  }, [playIndex]);
+  }, [playIndex, startTimer]);
 
   const pause = useCallback(() => {
     isStoppedRef.current = true;
@@ -77,7 +99,8 @@ export function useFullAudioPlayer(urls: string[]): UseFullAudioPlayerReturn {
       audioRef.current.pause();
     }
     setIsPlaying(false);
-  }, []);
+    clearTimer();
+  }, [clearTimer]);
 
   useEffect(() => {
     return () => {
@@ -92,6 +115,7 @@ export function useFullAudioPlayer(urls: string[]): UseFullAudioPlayerReturn {
     isPlaying,
     currentIndex,
     totalCount: urls.filter(Boolean).length,
+    elapsedSeconds,
     setOnIndexChange,
   };
 }
