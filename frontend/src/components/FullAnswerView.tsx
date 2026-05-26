@@ -160,7 +160,7 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
       <div className="fixed bottom-0 left-0 right-0 flex flex-col items-center pb-10"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 32px)' }}>
         <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3, ...spring }}
-          className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-gray-200 px-8 py-6 flex flex-col items-center gap-2 border border-gray-100"
+          className="flex flex-col items-center gap-2"
         >
           <CircularPlayer isPlaying={isPlaying} progress={progress} isComplete={isComplete} onToggle={handleToggle} />
           {isComplete && onStartShadowing && (
