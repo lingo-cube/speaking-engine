@@ -21,7 +21,7 @@ function CircularPlayer({ isPlaying, progress, isComplete, onToggle }: {
     <div className="flex flex-col items-center gap-2">
       {/* Listen First label */}
       {!isPlaying && !isComplete && (
-        <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">Listen First</p>
+        <p className="text-sm text-gray-400 font-semibold">Tap to listen</p>
       )}
 
       <div className="relative w-24 h-24 flex items-center justify-center">
@@ -45,7 +45,7 @@ function CircularPlayer({ isPlaying, progress, isComplete, onToggle }: {
         <button
           type="button"
           onClick={onToggle}
-          className="w-20 h-20 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-lg hover:shadow-xl z-10"
+          className="w-20 h-20 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 active:scale-90 cursor-pointer shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-0.5 z-10"
           aria-label={isPlaying ? 'Pause' : isComplete ? 'Completed' : 'Play full answer'}
         >
           {isComplete ? (
@@ -250,7 +250,7 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
             transition={{ duration: 0.3 }}
             type="button"
             onClick={onStartShadowing}
-            className="mt-4 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-sm hover:shadow-md"
+            className="mt-4 px-6 py-3 rounded-2xl bg-primary text-white text-[15px] font-bold hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
           >
             Start Shadowing
           </motion.button>

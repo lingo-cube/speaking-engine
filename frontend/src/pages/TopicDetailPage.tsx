@@ -43,7 +43,7 @@ export function TopicDetailPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.04, duration: 0.2 }}
-              className="group bg-white rounded-xl border border-gray-100 p-5 hover:border-gray-200 hover:shadow-sm transition-all duration-200"
+              className="group bg-white rounded-2xl border-2 border-gray-100 p-5 hover:border-primary/20 hover:shadow-lg hover:shadow-gray-100 hover:-translate-y-0.5 transition-all duration-200"
             >
               <p className="text-[18px] font-medium text-gray-900 leading-relaxed mb-3">{question.question}</p>
               <div className="flex items-center justify-between">
@@ -54,7 +54,7 @@ export function TopicDetailPage() {
                 <button
                   type="button"
                   onClick={() => navigate(`/session/${question.id}`)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-sm hover:shadow-md opacity-0 group-hover:opacity-100 sm:opacity-100"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 opacity-0 group-hover:opacity-100 sm:opacity-100"
                 >
                   Start
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9,18 15,12 9,6"/></svg>

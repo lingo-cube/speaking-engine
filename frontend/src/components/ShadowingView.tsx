@@ -54,11 +54,13 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -16 }}
             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="w-full max-w-[640px] bg-white rounded-2xl shadow-sm border border-gray-100/80 px-8 py-12 sm:px-12 sm:py-16 text-center"
+            className="w-full max-w-[640px] bg-white rounded-3xl shadow-lg shadow-gray-100 border-2 border-gray-100 px-8 py-12 sm:px-12 sm:py-16 text-center"
           >
-            {/* Chunk number badge */}
-            <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6">
-              {currentIndex + 1}
+            {/* Chunk number badge — Duolingo-style pill */}
+            <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6">
+              <span>{currentIndex + 1}</span>
+              <span className="text-primary/40">/</span>
+              <span className="text-primary/60">{chunks.length}</span>
             </div>
 
             {/* Chunk text */}
@@ -72,7 +74,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
       {/* Controls panel — unified card */}
       <div className="px-6 pb-8 max-w-sm mx-auto w-full space-y-4">
         {/* Action buttons row */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 p-4">
+        <div className="bg-white rounded-3xl shadow-lg shadow-gray-100 border-2 border-gray-100 p-4">
           <div className="flex items-center justify-center gap-6">
             {/* Play */}
             <button
@@ -150,8 +152,8 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
           {/* Button labels */}
           {!hasRecorded && !isRecording && (
             <div className="flex items-center justify-center gap-14 mt-2">
-              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Listen</span>
-              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Record</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Listen</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Record</span>
             </div>
           )}
         </div>
@@ -161,13 +163,13 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
           type="button"
           onClick={handleNext}
           disabled={!canAdvance}
-          className={`w-full py-3 rounded-xl font-medium text-sm transition-all duration-200 active:scale-[0.98] cursor-pointer
+          className={`w-full py-3.5 rounded-2xl font-bold text-[15px] transition-all duration-200 active:scale-[0.97] cursor-pointer
             ${canAdvance
-              ? isLast ? 'bg-green-500 text-white hover:bg-green-600 shadow-sm hover:shadow-md' : 'bg-primary text-white hover:bg-primary-hover shadow-sm hover:shadow-md'
+              ? isLast ? 'bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/30 hover:-translate-y-0.5' : 'bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5'
               : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
         >
-          {!canAdvance ? 'Record to continue' : isLast ? 'Complete Session' : 'Next Chunk'}
+          {!canAdvance ? 'Record to continue' : isLast ? 'Complete!' : 'Next'}
         </button>
       </div>
     </div>

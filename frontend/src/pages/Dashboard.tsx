@@ -35,11 +35,11 @@ export function Dashboard() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-white">
       <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12 space-y-10">
         {/* Header */}
         <header className="animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
             Speaking Engine
           </h1>
           <p className="text-gray-500 text-base">Choose a topic to practice</p>
