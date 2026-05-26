@@ -16,10 +16,10 @@ function Sentence({ text, active, onClick }: { text: string; active: boolean; on
       onClick={onClick}
       onTouchEnd={(e) => { e.preventDefault(); onClick(); }}
       onKeyDown={(e) => { if (e.key === 'Enter') { onClick(); }}}
-      className={`inline cursor-pointer transition-all duration-500 rounded-sm select-none
+      className={`inline cursor-pointer transition-all duration-300 rounded-sm select-none
         ${active
-          ? 'bg-primary/10 text-primary font-semibold shadow-[0_0_12px_rgba(88,204,2,0.18)]'
-          : 'hover:bg-primary/5 hover:text-primary active:bg-primary/10'}`}
+          ? 'bg-primary/10 shadow-[0_0_12px_rgba(88,204,2,0.18)] ring-1 ring-primary/20'
+          : 'hover:shadow-[0_0_8px_rgba(88,204,2,0.10)] active:ring-1 active:ring-primary/15'}`}
       style={{ touchAction: 'manipulation' }}
     >
       {text}
