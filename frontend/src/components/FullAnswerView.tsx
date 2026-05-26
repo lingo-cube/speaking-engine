@@ -250,9 +250,9 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
             transition={{ duration: 0.3 }}
             type="button"
             onClick={onStartShadowing}
-            className="mt-4 text-sm font-medium text-primary hover:text-primary-hover hover:underline transition-colors cursor-pointer"
+            className="mt-4 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-sm hover:shadow-md"
           >
-            Start Shadowing &rarr;
+            Start Shadowing
           </motion.button>
         )}
       </div>
