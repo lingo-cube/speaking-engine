@@ -10,41 +10,10 @@ const spring = { type: 'spring' as const, stiffness: 400, damping: 30 };
 
 function Sentence({ text, active }: { text: string; active: boolean }) {
   return (
-    <span className="relative inline">
-      <span className={`transition-colors duration-300 ${active ? 'text-primary font-semibold' : ''}`}>
-        {text}
-      </span>
-      {/* Wavy underline when active */}
-      {active && (
-        <motion.span
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          exit={{ scaleX: 0, opacity: 0 }}
-          className="absolute left-0 -bottom-0.5 w-full h-[3px]"
-          aria-hidden="true"
-        >
-          <svg className="w-full h-full" viewBox="0 0 100 4" preserveAspectRatio="none">
-            <motion.path
-              d="M0,2 Q12.5,0 25,2 Q37.5,4 50,2 Q62.5,0 75,2 Q87.5,4 100,2"
-              fill="none" stroke="var(--theme-primary, #58CC02)" strokeWidth="2.5"
-              strokeLinecap="round"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-            />
-          </svg>
-        </motion.span>
-      )}
-      {/* Soft glow background */}
-      {active && (
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="absolute inset-0 bg-primary/10 rounded-sm -z-10"
-          layoutId="sentence-bg"
-        />
-      )}
+    <span className={`inline transition-all duration-500 rounded-sm px-0.5
+      ${active ? 'bg-primary/10 text-primary font-semibold shadow-[0_0_12px_rgba(88,204,2,0.18)]' : ''}`}
+    >
+      {text}
     </span>
   );
 }
