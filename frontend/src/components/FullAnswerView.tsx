@@ -91,7 +91,7 @@ function CircularPlayer({ isPlaying, progress, isComplete, onToggle }: {
           ) : isPlaying ? (
             <svg className="w-9 h-9" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>
           ) : (
-            <svg className="w-9 h-9 ml-1.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="7,4 22,12 7,20"/></svg>
+            <svg className="w-9 h-9" viewBox="0 0 24 24" fill="currentColor"><polygon points="8,5 20,12 8,19"/></svg>
           )}
         </motion.button>
       </div>
