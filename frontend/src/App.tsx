@@ -1,14 +1,19 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { TopicListPage } from './pages/TopicListPage';
-import { PracticePage } from './pages/PracticePage';
+import { AnimatePresence } from 'framer-motion';
+import { Dashboard } from './pages/Dashboard';
+import { TopicDetailPage } from './pages/TopicDetailPage';
+import { SessionPage } from './pages/SessionPage';
 
 function App() {
   return (
     <BrowserRouter basename="/speaking-engine">
-      <Routes>
-        <Route path="/" element={<TopicListPage />} />
-        <Route path="/practice/:topicCode" element={<PracticePage />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/topic/:code" element={<TopicDetailPage />} />
+          <Route path="/session/:questionId" element={<SessionPage />} />
+        </Routes>
+      </AnimatePresence>
     </BrowserRouter>
   );
 }
