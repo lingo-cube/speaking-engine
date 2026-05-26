@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useFullAudioPlayer } from '../hooks/useFullAudioPlayer';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { useRecorder } from '../hooks/useRecorder';
@@ -35,36 +35,34 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
   const sentenceAudio = useAudioPlayer(selectedAudioUrl);
   const recorder = useRecorder();
 
-  // Debug: log mode on mount and mode changes
-  useEffect(() => {
-    console.log('[BottomControlBar] mode:', selectedChunk === null ? 'READING' : 'TRAINING',
-      'selectedChunk:', selectedChunk, 'chunks:', chunks.length,
-      'activeIndex:', activeIndex);
-  }, [selectedChunk, chunks.length, activeIndex]);
+  // Auto-transition: after user explicitly starts full playback, when it ends → enter training
+  const didUserStartFull = useRef(false);
 
-  // Auto-transition: after user plays full, when it ends → enter training
-  const [hasStartedFull, setHasStartedFull] = useState(false);
-
+  // Clear the flag when user manually enters or exits training mode
   useEffect(() => {
     if (selectedChunk !== null) {
-      setHasStartedFull(false);
+      didUserStartFull.current = false;
     }
   }, [selectedChunk]);
 
+  // Detect full-playback end (transition from playing to stopped naturally)
+  const prevFullPlaying = useRef(false);
   useEffect(() => {
-    if (hasStartedFull && !fullAudio.isPlaying && fullAudio.currentIndex === -1 && selectedChunk === null && fullAudio.totalCount > 0) {
-      console.log('[BottomControlBar] auto-transition: full playback ended → selecting sentence 0');
+    const wasPlaying = prevFullPlaying.current;
+    prevFullPlaying.current = fullAudio.isPlaying;
+
+    if (wasPlaying && !fullAudio.isPlaying && didUserStartFull.current && selectedChunk === null && fullAudio.totalCount > 0) {
+      console.log('[BottomControlBar] Full playback ended → entering training mode');
       onSelectSentence(0);
-      setHasStartedFull(false);
     }
-  }, [hasStartedFull, fullAudio.isPlaying, fullAudio.currentIndex, selectedChunk, fullAudio.totalCount, onSelectSentence]);
+  });
 
   const handleFullToggle = useCallback(() => {
     if (fullAudio.isPlaying) {
       fullAudio.pause();
     } else {
       if (sentenceAudio.isPlaying) sentenceAudio.pause();
-      setHasStartedFull(true);
+      didUserStartFull.current = true;
       fullAudio.play();
     }
   }, [fullAudio, sentenceAudio]);
@@ -92,9 +90,7 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
 
   const fullProgress = fullAudio.totalCount > 0 && fullAudio.currentIndex >= 0
     ? (fullAudio.currentIndex + 1) / fullAudio.totalCount
-    : fullAudio.isPlaying ? 0.01 : 0;
-  const fullCurrentTime = formatTime(fullAudio.elapsedSeconds);
-  const fullDuration = formatTime(fullAudio.totalCount * 5);
+    : 0;
 
   return (
     <div
@@ -102,22 +98,28 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 8px)' }}
     >
       <div className="max-w-2xl mx-auto px-4 py-3">
-        {/* READING MODE */}
+        {/* ===== READING MODE: no sentence selected ===== */}
         {isReading && (
           <div className="flex flex-col items-center">
-            <CircularPlayButton
-              isPlaying={isFullPlaying}
-              progress={fullProgress}
-              currentTime={fullCurrentTime}
-              duration={fullDuration}
-              onToggle={handleFullToggle}
-            />
+            {chunks.length > 0 && (
+              <CircularPlayButton
+                isPlaying={isFullPlaying}
+                progress={fullProgress}
+                currentTime={formatTime(fullAudio.elapsedSeconds)}
+                duration={formatTime(fullAudio.totalCount * 5)}
+                onToggle={handleFullToggle}
+              />
+            )}
+            {chunks.length === 0 && (
+              <p className="text-sm text-gray-400">No audio available</p>
+            )}
           </div>
         )}
 
-        {/* TRAINING MODE */}
+        {/* ===== TRAINING MODE: sentence selected ===== */}
         {!isReading && selectedChunk && (
           <div className="space-y-4">
+            {/* [×] */}
             <div className="flex justify-end">
               <button
                 type="button"
@@ -131,21 +133,19 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
               </button>
             </div>
 
+            {/* Dot navigation */}
             <DotNavigation
               count={chunks.length}
               activeIndex={activeIndex ?? 0}
               onDotClick={onSelectSentence}
             />
 
-            {/* Recorded state */}
+            {/* Recorded area */}
             {hasRecording && (
               <div className="space-y-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    console.log('[BottomControlBar] playing recording, blob size:', recorder.audioBlob?.size);
-                    recorder.playRecording();
-                  }}
+                  onClick={recorder.playRecording}
                   className="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-green-500 text-white hover:bg-green-600 transition-all duration-200 active:scale-95 cursor-pointer font-medium shadow-md"
                 >
                   <svg className="w-5 h-5 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
@@ -159,10 +159,7 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
                     onClick={handleStartRecording}
                     className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-danger text-white hover:bg-danger-hover transition-all duration-200 active:scale-95 cursor-pointer text-sm font-medium shadow-md"
                   >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4z" />
-                      <path d="M19 11a7 7 0 0 1-14 0" stroke="#fff" strokeWidth="2" fill="none" />
-                    </svg>
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4z"/><path d="M19 11a7 7 0 0 1-14 0" stroke="#fff" strokeWidth="2" fill="none"/></svg>
                     Re-record
                   </button>
                   <button
@@ -170,17 +167,14 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
                     onClick={handleSentenceToggle}
                     className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-200 active:scale-95 cursor-pointer text-sm font-medium"
                   >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polyline points="1,4 1,10 7,10" />
-                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-                    </svg>
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1,4 1,10 7,10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
                     Replay original
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Not recorded */}
+            {/* Not recorded: ▶ + 🎤 */}
             {!hasRecording && (
               <div className="flex items-center justify-center gap-4">
                 {!isRecMode && (
@@ -191,14 +185,9 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
                     aria-label={isSentencePlaying ? 'Pause' : 'Play sentence'}
                   >
                     {isSentencePlaying ? (
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                        <rect x="6" y="4" width="4" height="16" rx="1" />
-                        <rect x="14" y="4" width="4" height="16" rx="1" />
-                      </svg>
+                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
                     ) : (
-                      <svg className="w-6 h-6 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="6,4 20,12 6,20" />
-                      </svg>
+                      <svg className="w-6 h-6 ml-0.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
                     )}
                   </button>
                 )}
@@ -211,10 +200,7 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
                     className="w-14 h-14 flex items-center justify-center rounded-full bg-danger text-white hover:bg-danger-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                     aria-label="Record"
                   >
-                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4z" />
-                      <path d="M19 11a7 7 0 0 1-14 0" stroke="#fff" strokeWidth="2" fill="none" />
-                    </svg>
+                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4z"/><path d="M19 11a7 7 0 0 1-14 0" stroke="#fff" strokeWidth="2" fill="none"/></svg>
                   </button>
                 )}
 
@@ -226,9 +212,7 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
                       className="w-14 h-14 flex items-center justify-center rounded-full bg-danger text-white animate-pulse-recording cursor-pointer shadow-lg"
                       aria-label="Stop recording"
                     >
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                        <rect x="6" y="6" width="12" height="12" rx="2" />
-                      </svg>
+                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
                     </button>
                     <span className="text-base font-mono text-danger tabular-nums font-medium">
                       {formatTime(recorder.recordingTime)}
@@ -238,6 +222,7 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
               </div>
             )}
 
+            {/* Full link */}
             {fullAudio.totalCount > 0 && (
               <button
                 type="button"
@@ -245,14 +230,9 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
                 className="flex items-center justify-center gap-1.5 mx-auto text-xs text-gray-400 hover:text-primary transition-colors cursor-pointer"
               >
                 {isFullPlaying ? (
-                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="6" y="4" width="4" height="16" rx="1" />
-                    <rect x="14" y="4" width="4" height="16" rx="1" />
-                  </svg>
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
                 ) : (
-                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="6,4 20,12 6,20" />
-                  </svg>
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
                 )}
                 <span>
                   {isFullPlaying ? 'Pause' : 'Play'} Full · {fullAudio.currentIndex >= 0 ? fullAudio.currentIndex + 1 : '-'} / {fullAudio.totalCount}
