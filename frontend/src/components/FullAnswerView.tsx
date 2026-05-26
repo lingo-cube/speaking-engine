@@ -10,10 +10,8 @@ const spring = { type: 'spring' as const, stiffness: 400, damping: 30 };
 
 function Sentence({ text, active }: { text: string; active: boolean }) {
   return (
-    <span className={`inline transition-all duration-500 rounded-sm px-0.5
-      ${active
-        ? 'bg-primary/10 text-primary font-semibold shadow-[0_0_12px_rgba(88,204,2,0.18)]'
-        : 'border-b border-dotted border-gray-200 hover:border-primary/30'}`}
+    <span className={`inline transition-all duration-500 rounded-sm
+      ${active ? 'bg-primary/10 text-primary font-semibold shadow-[0_0_12px_rgba(88,204,2,0.18)]' : ''}`}
     >
       {text}
     </span>
