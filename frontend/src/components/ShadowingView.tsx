@@ -44,8 +44,9 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
       {/* Progress bar at top */}
       <div className="px-4 pt-4 pb-2">
         <div className="flex items-center gap-3 max-w-md mx-auto">
-          <button onClick={() => navigate(-1)} className="text-gray-400 hover:text-gray-600 cursor-pointer">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15,18 9,12 15,6"/></svg>
+          <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 px-2 py-1 -ml-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all cursor-pointer">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15,18 9,12 15,6"/></svg>
+            <span className="text-sm font-medium">Back</span>
           </button>
           <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
             <motion.div

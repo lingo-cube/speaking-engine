@@ -110,7 +110,7 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
           <TypeTag type={question.type} />
           <FrameworkTag framework={question.framework} />
         </div>
-        <h1 className="text-[32px] sm:text-[48px] font-extrabold text-gray-900 leading-[1.15] mb-12 tracking-tight">
+        <h1 className="text-[28px] sm:text-[40px] font-extrabold text-gray-900 leading-[1.2] mb-12 tracking-tight drop-shadow-sm">
           {question.question}
         </h1>
         <div className="space-y-[32px]">
