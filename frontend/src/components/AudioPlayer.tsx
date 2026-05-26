@@ -25,7 +25,7 @@ export function AudioPlayer({ audioUrl }: AudioPlayerProps) {
         <button
           type="button"
           onClick={isPlaying ? pause : play}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 flex-shrink-0 cursor-pointer shadow-sm"
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 active:scale-95 flex-shrink-0 cursor-pointer shadow-md hover:shadow-lg"
           aria-label={isPlaying ? 'Pause' : 'Play'}
         >
           {isPlaying ? (
@@ -44,7 +44,7 @@ export function AudioPlayer({ audioUrl }: AudioPlayerProps) {
         <button
           type="button"
           onClick={replay}
-          className="w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200 flex-shrink-0 cursor-pointer"
+          className="w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200 active:scale-95 flex-shrink-0 cursor-pointer"
           aria-label="Replay"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -57,7 +57,7 @@ export function AudioPlayer({ audioUrl }: AudioPlayerProps) {
         <button
           type="button"
           onClick={toggleSlowMode}
-          className={`text-sm font-semibold px-3 py-1.5 rounded-full border transition-all duration-200 flex-shrink-0 cursor-pointer
+          className={`text-sm font-semibold px-3 py-1.5 rounded-full border transition-all duration-200 active:scale-95 flex-shrink-0 cursor-pointer
             ${isSlowMode
               ? 'bg-primary-light text-primary border-primary'
               : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300 hover:text-gray-700'

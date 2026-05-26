@@ -12,7 +12,7 @@ export function FullAudioBar({ isPlaying, currentIndex, totalCount, onPlay, onPa
       <button
         type="button"
         onClick={isPlaying ? onPause : onPlay}
-        className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-colors duration-200 cursor-pointer flex-shrink-0"
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer flex-shrink-0 shadow-md hover:shadow-lg"
         aria-label={isPlaying ? 'Pause full playback' : 'Play full answer'}
       >
         {isPlaying ? (

@@ -28,8 +28,8 @@ function groupByParagraph(chunks: ApiChunk[]): ApiChunk[][] {
 export function ArticleContent({ chunks, activeIndex, highlightedIndex, onSentenceClick }: ArticleContentProps) {
   if (chunks.length === 0) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-        <p className="text-gray-400">No answer content available.</p>
+      <div className="text-center py-12 text-gray-400">
+        <p>No answer content available.</p>
       </div>
     );
   }
@@ -38,7 +38,7 @@ export function ArticleContent({ chunks, activeIndex, highlightedIndex, onSenten
   let chunkIndex = 0;
 
   return (
-    <article className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+    <>
       {paragraphs.map((group, groupIdx) => {
         const startIndex = chunkIndex;
         chunkIndex += group.length;
@@ -62,6 +62,6 @@ export function ArticleContent({ chunks, activeIndex, highlightedIndex, onSenten
           </p>
         );
       })}
-    </article>
+    </>
   );
 }

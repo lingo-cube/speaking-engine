@@ -38,7 +38,7 @@ export function RecordButton() {
         <button
           type="button"
           onClick={startRecording}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-danger text-white hover:bg-danger-hover transition-all duration-200 flex-shrink-0 cursor-pointer shadow-sm"
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-danger text-white hover:bg-danger-hover transition-all duration-200 active:scale-95 flex-shrink-0 cursor-pointer shadow-md hover:shadow-lg"
           aria-label="Start recording"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -54,7 +54,7 @@ export function RecordButton() {
           <button
             type="button"
             onClick={stopRecording}
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-danger text-white animate-pulse-recording flex-shrink-0 cursor-pointer shadow-sm"
+            className="w-12 h-12 flex items-center justify-center rounded-full bg-danger text-white animate-pulse-recording flex-shrink-0 cursor-pointer shadow-md"
             aria-label="Stop recording"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -73,7 +73,7 @@ export function RecordButton() {
           <button
             type="button"
             onClick={playRecording}
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 transition-all duration-200 flex-shrink-0 cursor-pointer shadow-sm"
+            className="w-12 h-12 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 transition-all duration-200 active:scale-95 flex-shrink-0 cursor-pointer shadow-md hover:shadow-lg"
             aria-label="Play recording"
           >
             <svg className="w-5 h-5 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
@@ -83,7 +83,7 @@ export function RecordButton() {
           <button
             type="button"
             onClick={startRecording}
-            className="text-sm text-primary hover:text-primary-hover font-medium transition-colors duration-200 cursor-pointer"
+            className="text-sm text-primary hover:text-primary-hover font-medium transition-all duration-200 active:scale-95 cursor-pointer"
           >
             Re-record
           </button>

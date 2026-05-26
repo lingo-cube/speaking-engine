@@ -23,13 +23,21 @@ export function SentenceLine({ text, isActive, isHighlighted, onClick }: Sentenc
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); }}}
-      className={`cursor-pointer transition-all duration-300
+      className={`cursor-pointer transition-all duration-200 active:scale-[0.97] px-0.5 -mx-0.5 rounded
         ${isActive
-          ? 'bg-primary-light text-primary rounded px-0.5 -mx-0.5'
+          ? 'text-primary'
           : isHighlighted
-            ? 'bg-highlight-light text-highlight rounded px-0.5 -mx-0.5 shadow-[0_0_0_2px_rgba(251,191,36,0.2)]'
+            ? ''
             : 'hover:text-primary'
         }`}
+      style={isActive ? {
+        background: 'color-mix(in srgb, var(--theme-primary) 10%, transparent)',
+        borderLeft: '3px solid var(--theme-primary)',
+        paddingLeft: '0.5rem',
+        marginLeft: '-0.5rem',
+      } : isHighlighted ? {
+        background: 'color-mix(in srgb, var(--theme-primary) 5%, transparent)',
+      } : undefined}
     >
       {text}
     </span>

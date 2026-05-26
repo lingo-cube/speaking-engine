@@ -1,8 +1,8 @@
-import type { Chunk } from '../types';
+import type { ApiChunk } from '../types';
 import { ChunkCard } from './ChunkCard';
 
 interface ShadowingPanelProps {
-  chunks: Chunk[];
+  chunks: ApiChunk[];
 }
 
 export function ShadowingPanel({ chunks }: ShadowingPanelProps) {

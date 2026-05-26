@@ -1,9 +1,9 @@
-import type { Chunk } from '../types';
+import type { ApiChunk } from '../types';
 import { AudioPlayer } from './AudioPlayer';
 import { RecordButton } from './RecordButton';
 
 interface TrainingDrawerProps {
-  chunk: Chunk | null;
+  chunk: ApiChunk | null;
   isOpen: boolean;
   onClose: () => void;
 }
