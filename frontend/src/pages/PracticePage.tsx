@@ -147,12 +147,12 @@ export function PracticePage() {
           <main className="flex-1 min-w-0">
             {selectedQuestion ? (
               <div className="space-y-6">
+                <p className="text-xs text-gray-400">PracticePage: question #{selectedQuestion.id}, chunks: {answer?.chunks.length ?? 0}</p>
                 <ArticleView
                   key={selectedQuestion.id}
                   question={selectedQuestion}
                   chunks={answer?.chunks ?? []}
                 />
-{/* Next/Prev handled by top bar ◀ ▶ arrows */}
               </div>
             ) : (
               <div className="bg-white rounded-2xl shadow-md ring-1 ring-gray-900/5 p-12 text-center">

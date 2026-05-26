@@ -98,9 +98,10 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 8px)' }}
     >
       <div className="max-w-2xl mx-auto px-4 py-3">
-        {/* ===== READING MODE: no sentence selected ===== */}
+        {/* ===== READING MODE ===== */}
         {isReading && (
           <div className="flex flex-col items-center">
+            <p className="text-xs text-gray-400 mb-1">READING MODE (click sentence to train)</p>
             {chunks.length > 0 && (
               <CircularPlayButton
                 isPlaying={isFullPlaying}
@@ -116,9 +117,10 @@ export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlig
           </div>
         )}
 
-        {/* ===== TRAINING MODE: sentence selected ===== */}
+        {/* ===== TRAINING MODE ===== */}
         {!isReading && selectedChunk && (
           <div className="space-y-4">
+            <p className="text-xs text-gray-400 text-center">TRAINING MODE (sentence {activeIndex !== null ? activeIndex + 1 : '?'}/{chunks.length})</p>
             {/* [×] */}
             <div className="flex justify-end">
               <button
