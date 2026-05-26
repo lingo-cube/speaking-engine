@@ -90,23 +90,25 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
             </motion.div>
           ) : (
             <motion.div key={`chunk-${currentIndex}`} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={spring}
-              className="w-full max-w-lg text-center space-y-8 bg-white rounded-3xl border-2 border-primary/15 shadow-lg shadow-primary/5 px-8 sm:px-12 py-10 sm:py-14"
+              className="w-full max-w-lg text-center space-y-5"
             >
-              {/* Badge */}
+              {/* Badge — outside card */}
               <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}
                 className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-extrabold"
               >
                 Sentence {currentIndex + 1}
               </motion.div>
 
-              {/* The sentence — big, bold, prominent */}
-              <motion.p initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15 }}
-                className="text-[36px] sm:text-[44px] font-extrabold text-gray-900 leading-[1.4] tracking-tight"
-              >
-                {current.text}
-              </motion.p>
+              {/* Chunk card — just the text */}
+              <div className="bg-white rounded-3xl border-2 border-primary/15 shadow-lg shadow-primary/5 px-8 sm:px-12 py-10 sm:py-14">
+                <motion.p initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15 }}
+                  className="text-[36px] sm:text-[44px] font-extrabold text-gray-900 leading-[1.4] tracking-tight"
+                >
+                  {current.text}
+                </motion.p>
+              </div>
 
-              {/* Hint */}
+              {/* Hint — outside card */}
               {!hasRecorded && !isRecording && (
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
                   className="text-sm text-gray-400 font-semibold"
