@@ -146,7 +146,7 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
         </h1>
         <div className="space-y-[32px]">
           {paras.map((para, pi) => (
-            <p key={pi} className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal">
+            <p key={pi} className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal" style={{ textIndent: '2em' }}>
               {para.map((chunk) => {
                 const i = idx++; const active = isPlaying && i === currentChunk;
                 return <Sentence key={chunk.id} text={chunk.text} active={active} />;
