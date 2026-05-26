@@ -102,7 +102,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
               {/* Chunk card — just the text */}
               <div className="bg-white rounded-3xl border-2 border-primary/15 shadow-lg shadow-primary/5 px-8 sm:px-12 py-10 sm:py-14">
                 <motion.p initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15 }}
-                  className="text-[36px] sm:text-[44px] font-extrabold text-gray-900 leading-[1.4] tracking-tight"
+                  className="text-[28px] sm:text-[34px] font-bold text-gray-900 leading-[1.5] tracking-tight"
                 >
                   {current.text}
                 </motion.p>
