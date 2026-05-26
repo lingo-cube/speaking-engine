@@ -38,7 +38,7 @@ export function RecordButton() {
         <button
           type="button"
           onClick={startRecording}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 transition-all duration-200 flex-shrink-0 cursor-pointer shadow-sm"
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-danger text-white hover:bg-danger-hover transition-all duration-200 flex-shrink-0 cursor-pointer shadow-sm"
           aria-label="Start recording"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -54,14 +54,14 @@ export function RecordButton() {
           <button
             type="button"
             onClick={stopRecording}
-            className="w-12 h-12 flex items-center justify-center rounded-full bg-red-500 text-white animate-pulse-recording flex-shrink-0 cursor-pointer shadow-sm"
+            className="w-12 h-12 flex items-center justify-center rounded-full bg-danger text-white animate-pulse-recording flex-shrink-0 cursor-pointer shadow-sm"
             aria-label="Stop recording"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <rect x="6" y="6" width="12" height="12" rx="2" />
             </svg>
           </button>
-          <span className="text-base font-mono text-red-500 tabular-nums font-medium">
+          <span className="text-base font-mono text-danger tabular-nums font-medium">
             {formatRecordingTime(recordingTime)}
           </span>
         </>
@@ -83,7 +83,7 @@ export function RecordButton() {
           <button
             type="button"
             onClick={startRecording}
-            className="text-sm text-indigo-500 hover:text-indigo-700 font-medium transition-colors duration-200 cursor-pointer"
+            className="text-sm text-primary hover:text-primary-hover font-medium transition-colors duration-200 cursor-pointer"
           >
             Re-record
           </button>

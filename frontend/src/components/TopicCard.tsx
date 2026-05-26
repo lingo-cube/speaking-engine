@@ -1,7 +1,7 @@
-import type { Topic } from '../types';
+import type { ApiTopic } from '../types';
 
 interface TopicCardProps {
-  topic: Topic;
+  topic: ApiTopic;
   onClick: () => void;
   isSelected?: boolean;
 }
@@ -13,7 +13,7 @@ export function TopicCard({ topic, onClick, isSelected }: TopicCardProps) {
       onClick={onClick}
       className={`w-full text-left rounded-2xl p-5 transition-all duration-200 cursor-pointer
         ${isSelected
-          ? 'bg-white ring-2 ring-indigo-500 shadow-md'
+          ? 'bg-white ring-2 ring-primary shadow-md'
           : 'bg-white shadow-sm hover:shadow-md hover:-translate-y-0.5'
         }`}
     >

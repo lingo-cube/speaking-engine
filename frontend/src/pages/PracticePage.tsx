@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getQuestionsByTopicCode, getAnswerByQuestionId, getTopicByCode } from '../mock/data';
-import type { Question } from '../types';
+import type { ApiQuestion } from '../types';
 import { QuestionCard } from '../components/QuestionCard';
 import { ArticleView } from '../components/ArticleView';
 
@@ -51,7 +51,7 @@ export function PracticePage() {
               Questions
             </h2>
             <nav className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
-              {questions.map((question: Question) => (
+              {questions.map((question: ApiQuestion) => (
                 <button
                   key={question.id}
                   type="button"

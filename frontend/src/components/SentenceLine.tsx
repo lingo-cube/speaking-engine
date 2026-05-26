@@ -25,10 +25,10 @@ export function SentenceLine({ text, isActive, isHighlighted, onClick }: Sentenc
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); }}}
       className={`cursor-pointer transition-all duration-300
         ${isActive
-          ? 'bg-indigo-100 text-indigo-900 rounded px-0.5 -mx-0.5'
+          ? 'bg-primary-light text-primary rounded px-0.5 -mx-0.5'
           : isHighlighted
-            ? 'bg-amber-50 text-amber-900 rounded px-0.5 -mx-0.5 shadow-[0_0_0_2px_rgba(251,191,36,0.2)]'
-            : 'hover:text-indigo-600'
+            ? 'bg-highlight-light text-highlight rounded px-0.5 -mx-0.5 shadow-[0_0_0_2px_rgba(251,191,36,0.2)]'
+            : 'hover:text-primary'
         }`}
     >
       {text}

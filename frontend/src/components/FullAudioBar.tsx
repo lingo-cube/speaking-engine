@@ -8,11 +8,11 @@ interface FullAudioBarProps {
 
 export function FullAudioBar({ isPlaying, currentIndex, totalCount, onPlay, onPause }: FullAudioBarProps) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-indigo-50 rounded-xl">
+    <div className="flex items-center gap-3 px-4 py-3 bg-primary-light rounded-xl">
       <button
         type="button"
         onClick={isPlaying ? onPause : onPlay}
-        className="w-10 h-10 flex items-center justify-center rounded-full bg-indigo-500 text-white hover:bg-indigo-600 transition-colors duration-200 cursor-pointer flex-shrink-0"
+        className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-colors duration-200 cursor-pointer flex-shrink-0"
         aria-label={isPlaying ? 'Pause full playback' : 'Play full answer'}
       >
         {isPlaying ? (
@@ -28,7 +28,7 @@ export function FullAudioBar({ isPlaying, currentIndex, totalCount, onPlay, onPa
       </button>
 
       <div className="flex-1">
-        <p className="text-sm font-medium text-indigo-700">
+        <p className="text-sm font-medium text-primary">
           {totalCount > 0
             ? currentIndex >= 0
               ? `Sentence ${currentIndex + 1} / ${totalCount}`
@@ -42,10 +42,10 @@ export function FullAudioBar({ isPlaying, currentIndex, totalCount, onPlay, onPa
                 key={i}
                 className={`h-1 flex-1 rounded-full transition-colors duration-200 ${
                   isPlaying && i === currentIndex
-                    ? 'bg-indigo-500'
+                    ? 'bg-primary'
                     : isPlaying && i < currentIndex
-                      ? 'bg-indigo-300'
-                      : 'bg-indigo-200'
+                      ? 'bg-primary/60'
+                      : 'bg-primary/40'
                 }`}
               />
             ))}

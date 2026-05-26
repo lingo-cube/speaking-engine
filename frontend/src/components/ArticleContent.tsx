@@ -1,11 +1,28 @@
-import type { Chunk } from '../types';
+import type { ApiChunk } from '../types';
 import { SentenceLine } from './SentenceLine';
 
 interface ArticleContentProps {
-  chunks: Chunk[];
+  chunks: ApiChunk[];
   activeIndex: number | null;
   highlightedIndex: number;
   onSentenceClick: (index: number) => void;
+}
+
+function groupByParagraph(chunks: ApiChunk[]): ApiChunk[][] {
+  const groups: ApiChunk[][] = [];
+  let currentGroup: ApiChunk[] = [];
+  let currentPara: number | null = null;
+
+  for (const chunk of chunks) {
+    if (currentPara !== null && chunk.paragraph !== currentPara) {
+      groups.push(currentGroup);
+      currentGroup = [];
+    }
+    currentGroup.push(chunk);
+    currentPara = chunk.paragraph;
+  }
+  if (currentGroup.length > 0) groups.push(currentGroup);
+  return groups;
 }
 
 export function ArticleContent({ chunks, activeIndex, highlightedIndex, onSentenceClick }: ArticleContentProps) {
@@ -17,20 +34,34 @@ export function ArticleContent({ chunks, activeIndex, highlightedIndex, onSenten
     );
   }
 
+  const paragraphs = groupByParagraph(chunks);
+  let chunkIndex = 0;
+
   return (
     <article className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-      <p className="text-lg text-gray-800 leading-relaxed tracking-normal">
-        {chunks.map((chunk, index) => [
-          <SentenceLine
-            key={chunk.id}
-            text={chunk.text}
-            isActive={activeIndex === index}
-            isHighlighted={highlightedIndex === index}
-            onClick={() => onSentenceClick(index)}
-          />,
-          index < chunks.length - 1 ? ' ' : null,
-        ])}
-      </p>
+      {paragraphs.map((group, groupIdx) => {
+        const startIndex = chunkIndex;
+        chunkIndex += group.length;
+        return (
+          <p key={groupIdx} className={groupIdx > 0 ? 'mt-4' : ''}>
+            <span className="text-lg text-gray-800 leading-relaxed tracking-normal">
+              {group.map((chunk, idx) => {
+                const flatIdx = startIndex + idx;
+                return [
+                  <SentenceLine
+                    key={chunk.id}
+                    text={chunk.text}
+                    isActive={activeIndex === flatIdx}
+                    isHighlighted={highlightedIndex === flatIdx}
+                    onClick={() => onSentenceClick(flatIdx)}
+                  />,
+                  idx < group.length - 1 ? ' ' : null,
+                ];
+              })}
+            </span>
+          </p>
+        );
+      })}
     </article>
   );
 }

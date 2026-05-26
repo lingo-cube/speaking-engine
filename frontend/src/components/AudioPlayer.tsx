@@ -25,7 +25,7 @@ export function AudioPlayer({ audioUrl }: AudioPlayerProps) {
         <button
           type="button"
           onClick={isPlaying ? pause : play}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-200 flex-shrink-0 cursor-pointer shadow-sm"
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 flex-shrink-0 cursor-pointer shadow-sm"
           aria-label={isPlaying ? 'Pause' : 'Play'}
         >
           {isPlaying ? (
@@ -59,7 +59,7 @@ export function AudioPlayer({ audioUrl }: AudioPlayerProps) {
           onClick={toggleSlowMode}
           className={`text-sm font-semibold px-3 py-1.5 rounded-full border transition-all duration-200 flex-shrink-0 cursor-pointer
             ${isSlowMode
-              ? 'bg-indigo-50 text-indigo-600 border-indigo-200'
+              ? 'bg-primary-light text-primary border-primary'
               : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300 hover:text-gray-700'
             }`}
           aria-label={isSlowMode ? 'Normal speed' : 'Slow mode'}
@@ -76,7 +76,7 @@ export function AudioPlayer({ audioUrl }: AudioPlayerProps) {
       {/* Progress bar */}
       <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <div
-          className="h-full bg-indigo-400 rounded-full transition-all duration-150"
+          className="h-full bg-primary rounded-full transition-all duration-150"
           style={{ width: `${Math.min(progress, 100)}%` }}
         />
       </div>

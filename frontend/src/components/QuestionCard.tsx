@@ -1,9 +1,9 @@
-import type { Question } from '../types';
+import type { ApiQuestion } from '../types';
 import { TypeTag } from './TypeTag';
 import { FrameworkTag } from './FrameworkTag';
 
 interface QuestionCardProps {
-  question: Question;
+  question: ApiQuestion;
 }
 
 export function QuestionCard({ question }: QuestionCardProps) {
