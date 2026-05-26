@@ -14,7 +14,7 @@ export function SessionHeader({
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center gap-3 px-4 py-3 border-b border-gray-100 bg-white/80 backdrop-blur-sm text-sm">
+    <div className="flex items-center justify-center gap-3 px-4 py-3 border-b border-gray-100/50 bg-white/80 backdrop-blur-xl text-sm sticky top-0 z-10">
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-1 text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"

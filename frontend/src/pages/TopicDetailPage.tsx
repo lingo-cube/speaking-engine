@@ -22,7 +22,7 @@ export function TopicDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 via-white to-white">
       <div className="max-w-[720px] mx-auto px-6 sm:px-8 py-8">
         {/* Header — minimal, matching SessionHeader */}
         <div className="flex items-center gap-3 mb-8">

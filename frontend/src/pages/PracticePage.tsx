@@ -54,7 +54,7 @@ export function PracticePage() {
             <button
               type="button"
               onClick={() => navigate('/')}
-              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 transition-colors duration-200 cursor-pointer"
+              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary transition-colors duration-200 cursor-pointer"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="15,18 9,12 15,6" />
@@ -110,7 +110,7 @@ export function PracticePage() {
                     onClick={() => setSelectedQuestionId(question.id)}
                     className={`text-left px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex-shrink-0 cursor-pointer whitespace-nowrap active:scale-[0.97]
                       ${isSelected
-                        ? 'bg-indigo-500 text-white shadow-sm'
+                        ? 'bg-primary text-white shadow-sm'
                         : 'bg-white text-gray-600 hover:bg-gray-100 shadow-sm ring-1 ring-gray-900/5'
                       }`}
                   >
@@ -133,7 +133,7 @@ export function PracticePage() {
                   onClick={() => setSelectedQuestionId(question.id)}
                   className={`text-left px-4 py-3 rounded-xl text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]
                     ${selectedQuestionId === question.id
-                      ? 'bg-indigo-500 text-white shadow-sm'
+                      ? 'bg-primary text-white shadow-sm'
                       : 'bg-white text-gray-700 hover:bg-gray-100 shadow-sm ring-1 ring-gray-900/5'
                     }`}
                 >
@@ -156,8 +156,8 @@ export function PracticePage() {
               </div>
             ) : (
               <div className="bg-white rounded-2xl shadow-md ring-1 ring-gray-900/5 p-12 text-center">
-                <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <div className="w-16 h-16 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-primary/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                     <line x1="12" y1="19" x2="12" y2="23" />

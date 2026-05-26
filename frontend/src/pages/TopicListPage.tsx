@@ -34,7 +34,7 @@ export function TopicListPage() {
               onClick={() => setActiveCategory(cat.key)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer
                 ${activeCategory === cat.key
-                  ? 'bg-indigo-500 text-white shadow-sm'
+                  ? 'bg-primary text-white shadow-sm'
                   : 'bg-white text-gray-600 hover:bg-gray-100 shadow-sm'
                 }`}
             >

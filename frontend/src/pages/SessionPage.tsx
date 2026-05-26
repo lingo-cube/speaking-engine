@@ -67,7 +67,7 @@ export function SessionPage() {
   const questionIndex = topicQuestions.findIndex((q) => q.id === numericId);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 via-white to-white">
       <SessionHeader
         topicName={topic.name}
         currentIndex={questionIndex >= 0 ? questionIndex : 0}
