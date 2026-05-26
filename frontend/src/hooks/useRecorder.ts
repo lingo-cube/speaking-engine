@@ -80,18 +80,26 @@ export function useRecorder(): UseRecorderReturn {
   }, []);
 
   const playRecording = useCallback(() => {
-    if (!audioBlob) return;
+    if (!audioBlob) {
+      console.warn('[useRecorder] No recording to play');
+      return;
+    }
+    console.log('[useRecorder] Playing recording, size:', audioBlob.size, 'type:', audioBlob.type);
     const url = URL.createObjectURL(audioBlob);
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current = null;
     }
     const audio = new Audio(url);
     audioRef.current = audio;
-    audio.play().catch(() => {
-      // Autoplay prevented, ignore
+    audio.play().then(() => {
+      console.log('[useRecorder] Playback started');
+    }).catch((err) => {
+      console.error('[useRecorder] Playback failed:', err.message);
     });
     audio.onended = () => {
       URL.revokeObjectURL(url);
+      console.log('[useRecorder] Playback ended');
     };
   }, [audioBlob]);
 
