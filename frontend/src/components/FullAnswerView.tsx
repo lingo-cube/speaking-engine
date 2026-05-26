@@ -18,7 +18,7 @@ function Sentence({ text, active, onClick }: { text: string; active: boolean; on
       onKeyDown={(e) => { if (e.key === 'Enter') { onClick(); }}}
       className={`inline cursor-pointer transition-all duration-300 rounded-sm select-none
         ${active
-          ? 'bg-primary/10 shadow-[0_0_12px_rgba(88,204,2,0.18)]'
+          ? 'bg-primary/20 shadow-[0_0_16px_rgba(88,204,2,0.25)]'
           : 'hover:bg-primary/5'}`}
       style={{ touchAction: 'manipulation' }}
     >
