@@ -28,18 +28,16 @@ export const mockQuestions: ApiQuestion[] = [
   { id: 15, topic_code: 'friends', question: 'Has your idea of friendship changed as you have grown older?', type: 'Comparison', framework: 'Past → Present → Reflection', created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
 ];
 
-// Paragraph grouping:
-//   Answer 1 (question_id 1): order 1,2 -> paragraph 1; order 3 -> paragraph 2
-//   Answer 2 (question_id 2): order 1,2,3 -> paragraph 1; order 4 -> paragraph 2
-//   Answer 3 (question_id 3): order 1,2 -> paragraph 1; order 3,4 -> paragraph 2
-//   All others: paragraph 1
+// Paragraph grouping: all short answers use paragraph 1 (continuous flow).
+// Longer answers (5+ sentences) use natural logical groupings:
+//   Answer 12 (question_id 12): order 1 -> paragraph 1 (opening), order 2-3 -> paragraph 2 (arguments), order 4-5 -> paragraph 3 (conclusion)
 export const mockAnswers: Record<number, AnswerWithChunks> = {
   1: {
     answer: { id: 1, question_id: 1, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
     chunks: [
       { id: 1, answer_id: 1, order: 1, paragraph: 1, text: 'I come from Wuhan, which is a big city in central China.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
       { id: 2, answer_id: 1, order: 2, paragraph: 1, text: 'There are many tourist attractions there.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
-      { id: 3, answer_id: 1, order: 3, paragraph: 2, text: 'Particularly East Lake, it is quiet and serene.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
+      { id: 3, answer_id: 1, order: 3, paragraph: 1, text: 'Particularly East Lake, it is quiet and serene.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
     ],
   },
   2: {
@@ -48,7 +46,7 @@ export const mockAnswers: Record<number, AnswerWithChunks> = {
       { id: 4, answer_id: 2, order: 1, paragraph: 1, text: 'What I like most about my hometown is the vibrant food culture.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
       { id: 5, answer_id: 2, order: 2, paragraph: 1, text: 'There are countless street food stalls and restaurants serving delicious local cuisine.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
       { id: 6, answer_id: 2, order: 3, paragraph: 1, text: 'For example, Wuhan is famous for its hot dry noodles, which are a breakfast staple.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
-      { id: 7, answer_id: 2, order: 4, paragraph: 2, text: 'I really miss the food whenever I am away from home.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
+      { id: 7, answer_id: 2, order: 4, paragraph: 1, text: 'I really miss the food whenever I am away from home.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
     ],
   },
   3: {
@@ -56,8 +54,8 @@ export const mockAnswers: Record<number, AnswerWithChunks> = {
     chunks: [
       { id: 8, answer_id: 3, order: 1, paragraph: 1, text: 'My hometown has changed significantly over the past decade.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
       { id: 9, answer_id: 3, order: 2, paragraph: 1, text: 'When I was younger, the city had fewer skyscrapers and wider streets.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
-      { id: 10, answer_id: 3, order: 3, paragraph: 2, text: 'Now it is much more modern, with new shopping malls and a metro system.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
-      { id: 11, answer_id: 3, order: 4, paragraph: 2, text: 'While I appreciate the development, I sometimes miss the old charm.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
+      { id: 10, answer_id: 3, order: 3, paragraph: 1, text: 'Now it is much more modern, with new shopping malls and a metro system.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
+      { id: 11, answer_id: 3, order: 4, paragraph: 1, text: 'While I appreciate the development, I sometimes miss the old charm.', audio_url: MOCK_AUDIO, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z' },
     ],
   },
   4: {
