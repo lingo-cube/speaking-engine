@@ -48,9 +48,10 @@ export function ArticleView({ chunks, question }: ArticleViewProps) {
       <BottomControlBar
         chunks={chunks}
         selectedChunk={selectedChunk}
-        highlightedIndex={highlightedIndex}
+        activeIndex={activeIndex}
         onHighlightedIndexChange={setHighlightedIndex}
         onCloseTraining={handleCloseTraining}
+        onSelectSentence={handleSentenceClick}
       />
     </div>
   );

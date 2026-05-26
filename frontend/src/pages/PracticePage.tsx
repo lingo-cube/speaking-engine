@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getQuestionsByTopicCode, getAnswerByQuestionId, getTopicByCode } from '../mock/data';
 import type { ApiQuestion } from '../types';
 import { ArticleView } from '../components/ArticleView';
-import { NextQuestionBar } from '../components/NextQuestionBar';
 
 export function PracticePage() {
   const { topicCode } = useParams<{ topicCode: string }>();
@@ -45,10 +44,6 @@ export function PracticePage() {
   const handleNext = useCallback(() => {
     if (nextQuestion) setSelectedQuestionId(nextQuestion.id);
   }, [nextQuestion]);
-
-  const handleRestart = useCallback(() => {
-    if (questions.length > 0) setSelectedQuestionId(questions[0].id);
-  }, [questions]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -157,14 +152,7 @@ export function PracticePage() {
                   question={selectedQuestion}
                   chunks={answer?.chunks ?? []}
                 />
-                <NextQuestionBar
-                  nextQuestion={nextQuestion}
-                  onNext={handleNext}
-                  onRestart={handleRestart}
-                  isLast={isLast}
-                  currentIndex={currentIndex}
-                  totalCount={questions.length}
-                />
+{/* Next/Prev handled by top bar ◀ ▶ arrows */}
               </div>
             ) : (
               <div className="bg-white rounded-2xl shadow-md ring-1 ring-gray-900/5 p-12 text-center">

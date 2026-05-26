@@ -3,13 +3,16 @@ import { useFullAudioPlayer } from '../hooks/useFullAudioPlayer';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { useRecorder } from '../hooks/useRecorder';
 import type { ApiChunk } from '../types';
+import { CircularPlayButton } from './CircularPlayButton';
+import { DotNavigation } from './DotNavigation';
 
 interface BottomControlBarProps {
   chunks: ApiChunk[];
   selectedChunk: ApiChunk | null;
-  highlightedIndex: number;
+  activeIndex: number | null;
   onHighlightedIndexChange: (index: number) => void;
   onCloseTraining: () => void;
+  onSelectSentence: (index: number) => void;
 }
 
 function formatTime(seconds: number): string {
@@ -19,73 +22,103 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-export function BottomControlBar({ chunks, selectedChunk, highlightedIndex: _highlightedIndex, onHighlightedIndexChange, onCloseTraining }: BottomControlBarProps) {
+export function BottomControlBar({ chunks, selectedChunk, activeIndex, onHighlightedIndexChange, onCloseTraining, onSelectSentence }: BottomControlBarProps) {
   // Full playback
   const audioUrls = chunks.map(c => c.audio_url);
-  const { play: playFull, pause: pauseFull, isPlaying: isFullPlaying, currentIndex, totalCount, setOnIndexChange } = useFullAudioPlayer(audioUrls);
+  const fullAudio = useFullAudioPlayer(audioUrls);
 
-  // Sync highlighting
+  // Sync full-playback highlighting
   useEffect(() => {
-    setOnIndexChange((idx) => onHighlightedIndexChange(idx));
-    return () => setOnIndexChange(null);
-  }, [setOnIndexChange, onHighlightedIndexChange]);
+    fullAudio.setOnIndexChange((idx) => onHighlightedIndexChange(idx));
+    return () => fullAudio.setOnIndexChange(null);
+  }, [fullAudio.setOnIndexChange, onHighlightedIndexChange]);
 
-  // Single sentence playback
+  // Sentence playback
   const selectedAudioUrl = selectedChunk?.audio_url ?? '';
-  const { play: playListen, pause: pauseListen, isPlaying: isListenPlaying, currentTime: listenCurrentTime, duration: listenDuration } = useAudioPlayer(selectedAudioUrl);
+  const sentenceAudio = useAudioPlayer(selectedAudioUrl);
 
   // Recording
-  const { startRecording, stopRecording, isRecording, recordingTime, audioBlob, isSupported, playRecording } = useRecorder();
+  const recorder = useRecorder();
 
-  // Mutual exclusion: stop full when Listen is pressed, stop Listen when Full is pressed
-  const handleListenClick = useCallback(() => {
-    if (isListenPlaying) {
-      pauseListen();
-    } else {
-      if (isFullPlaying) {
-        pauseFull();
-      }
-      playListen();
+  // Auto-transition: full playback ends → enter training mode with first sentence
+  useEffect(() => {
+    if (!fullAudio.isPlaying && fullAudio.currentIndex === -1 && fullAudio.totalCount > 0) {
+      // Full playback just ended (was playing, now stopped, currentIndex reset to -1)
     }
-  }, [isListenPlaying, pauseListen, isFullPlaying, pauseFull, playListen]);
+  }, [fullAudio.isPlaying, fullAudio.currentIndex, fullAudio.totalCount, onSelectSentence]);
 
-  const handleFullClick = useCallback(() => {
-    if (isFullPlaying) {
-      pauseFull();
+  // Mutual exclusion
+  const handleFullToggle = useCallback(() => {
+    if (fullAudio.isPlaying) {
+      fullAudio.pause();
     } else {
-      if (isListenPlaying) {
-        pauseListen();
-      }
-      playFull();
+      if (sentenceAudio.isPlaying) sentenceAudio.pause();
+      fullAudio.play();
     }
-  }, [isFullPlaying, pauseFull, isListenPlaying, pauseListen, playFull]);
+  }, [fullAudio, sentenceAudio]);
 
-  // Reading mode: sentence-level bar progress
-  const readingProgress = totalCount > 0 && currentIndex >= 0
-    ? ((currentIndex + 1) / totalCount) * 100
-    : 0;
+  const handleSentenceToggle = useCallback(() => {
+    if (sentenceAudio.isPlaying) {
+      sentenceAudio.pause();
+    } else {
+      if (fullAudio.isPlaying) fullAudio.pause();
+      sentenceAudio.play();
+    }
+  }, [sentenceAudio, fullAudio]);
 
-  // Training mode: real-time audio progress
-  const listenProgress = listenDuration > 0
-    ? (listenCurrentTime / listenDuration) * 100
+  const handleStartRecording = useCallback(() => {
+    if (fullAudio.isPlaying) fullAudio.pause();
+    if (sentenceAudio.isPlaying) sentenceAudio.pause();
+    recorder.startRecording();
+  }, [recorder, fullAudio, sentenceAudio]);
+
+  // Reading mode: no sentence selected
+  const isReading = selectedChunk === null;
+
+  // Training mode: sentence selected
+  const isTraining = selectedChunk !== null;
+
+  // Active modes
+  const isRecMode = recorder.isRecording;
+  const hasRecording = recorder.audioBlob !== null && !recorder.isRecording;
+  const isSentencePlaying = sentenceAudio.isPlaying;
+  const isFullPlaying = fullAudio.isPlaying;
+
+  // Progress for full playback ring
+  const fullProgress = fullAudio.totalCount > 0 && fullAudio.currentIndex >= 0
+    ? (fullAudio.currentIndex + 1) / fullAudio.totalCount
     : 0;
+  const fullCurrentTime = formatTime(0); // Per-sentence time not tracked at full level
+  const fullDuration = formatTime(0);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-all duration-[250ms] ease-out"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom, 8px)' }}>
+    <div
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 ease-out"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 8px)' }}
+    >
       <div className="max-w-2xl mx-auto px-4 py-3">
-        {selectedChunk ? (
-          /* ---- Training Mode ---- */
-          <div className="space-y-3 animate-fade-in">
-            {/* Top row: selected sentence preview + [×] close */}
-            <div className="flex items-start gap-2">
-              <p className="flex-1 text-sm text-gray-600 line-clamp-2 leading-snug">
-                {selectedChunk.text}
-              </p>
+        {/* ============ READING MODE ============ */}
+        {isReading && (
+          <div className="flex flex-col items-center">
+            <CircularPlayButton
+              isPlaying={isFullPlaying}
+              progress={fullProgress}
+              currentTime={fullCurrentTime}
+              duration={fullDuration}
+              onToggle={handleFullToggle}
+            />
+          </div>
+        )}
+
+        {/* ============ TRAINING MODE ============ */}
+        {isTraining && (
+          <div className="space-y-4">
+            {/* [×] close button */}
+            <div className="flex justify-end">
               <button
                 type="button"
                 onClick={onCloseTraining}
-                className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                 aria-label="Close training"
               >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -94,154 +127,136 @@ export function BottomControlBar({ chunks, selectedChunk, highlightedIndex: _hig
               </button>
             </div>
 
-            {/* Middle row: Listen + Record */}
-            <div className="flex gap-3">
-              {/* Listen button */}
-              <button
-                type="button"
-                onClick={handleListenClick}
-                className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-primary text-white hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer font-semibold text-base shadow-md hover:shadow-lg relative"
-              >
-                {isListenPlaying ? (
-                  <>
-                    <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                      <rect x="6" y="4" width="4" height="16" rx="1"/>
-                      <rect x="14" y="4" width="4" height="16" rx="1"/>
-                    </svg>
-                    <span className="tabular-nums">{formatTime(listenCurrentTime)} / {formatTime(listenDuration)}</span>
-                    {/* Inline progress bar at bottom of button */}
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/30 rounded-full overflow-hidden">
-                      <span
-                        className="block h-full bg-white rounded-full transition-all duration-300"
-                        style={{ width: `${listenProgress}%` }}
-                      />
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5 ml-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="6,4 20,12 6,20"/>
-                    </svg>
-                    Listen
-                  </>
-                )}
-              </button>
+            {/* Dot navigation */}
+            <DotNavigation
+              count={chunks.length}
+              activeIndex={activeIndex ?? 0}
+              onDotClick={onSelectSentence}
+            />
 
-              {/* Record area — morphing button */}
-              {!isRecording && !audioBlob && (
+            {/* Recorded state: dedicated area */}
+            {hasRecording && (
+              <div className="space-y-2">
                 <button
                   type="button"
-                  onClick={startRecording}
-                  disabled={!isSupported}
-                  className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-danger text-white hover:bg-danger-hover transition-all duration-200 active:scale-95 cursor-pointer font-semibold text-base shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={recorder.playRecording}
+                  className="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-green-500 text-white hover:bg-green-600 transition-all duration-200 active:scale-95 cursor-pointer font-medium shadow-md"
                 >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4z"/>
-                    <path d="M19 11a7 7 0 0 1-14 0" stroke="#fff" strokeWidth="2" fill="none"/>
+                  <svg className="w-5 h-5 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="6,4 20,12 6,20" />
                   </svg>
-                  Record
+                  Play my recording
                 </button>
-              )}
-
-              {isRecording && (
-                <button
-                  type="button"
-                  onClick={stopRecording}
-                  className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-danger text-white animate-pulse-recording cursor-pointer font-semibold text-base shadow-md"
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="6" y="6" width="12" height="12" rx="2"/>
-                  </svg>
-                  {recordingTime}s
-                </button>
-              )}
-
-              {audioBlob && !isRecording && (
-                <div className="flex-1 flex gap-2">
+                <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={playRecording}
-                    className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-green-500 text-white hover:bg-green-600 transition-all duration-200 active:scale-95 cursor-pointer font-semibold text-base shadow-md hover:shadow-lg"
+                    onClick={recorder.startRecording}
+                    className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-danger text-white hover:bg-danger-hover transition-all duration-200 active:scale-95 cursor-pointer text-sm font-medium shadow-md"
                   >
-                    <svg className="w-5 h-5 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="6,4 20,12 6,20"/>
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4z" />
+                      <path d="M19 11a7 7 0 0 1-14 0" stroke="#fff" strokeWidth="2" fill="none" />
                     </svg>
-                    Play
-                  </button>
-                  <button
-                    type="button"
-                    onClick={startRecording}
-                    className="px-4 h-14 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-200 active:scale-95 cursor-pointer text-sm font-medium"
-                  >
                     Re-record
                   </button>
+                  <button
+                    type="button"
+                    onClick={handleSentenceToggle}
+                    className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-200 active:scale-95 cursor-pointer text-sm font-medium"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="1,4 1,10 7,10" />
+                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                    </svg>
+                    Replay original
+                  </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* Bottom row: compact full-playback link */}
-            {totalCount > 0 && (
+            {/* Not recorded: ▶ + 🎤 modal mutual exclusion */}
+            {!hasRecording && (
+              <div className="flex items-center justify-center gap-4">
+                {/* Play button */}
+                {!isRecMode && (
+                  <button
+                    type="button"
+                    onClick={handleSentenceToggle}
+                    className="w-14 h-14 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-lg hover:shadow-xl"
+                    aria-label={isSentencePlaying ? 'Pause' : 'Play sentence'}
+                  >
+                    {isSentencePlaying ? (
+                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16" rx="1" />
+                        <rect x="14" y="4" width="4" height="16" rx="1" />
+                      </svg>
+                    ) : (
+                      <svg className="w-6 h-6 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="6,4 20,12 6,20" />
+                      </svg>
+                    )}
+                  </button>
+                )}
+
+                {/* Record button */}
+                {!isSentencePlaying && !isRecMode && (
+                  <button
+                    type="button"
+                    onClick={handleStartRecording}
+                    disabled={!recorder.isSupported}
+                    className="w-14 h-14 flex items-center justify-center rounded-full bg-danger text-white hover:bg-danger-hover transition-all duration-200 active:scale-95 cursor-pointer shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Record"
+                  >
+                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 14a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v4a4 4 0 0 0 4 4z" />
+                      <path d="M19 11a7 7 0 0 1-14 0" stroke="#fff" strokeWidth="2" fill="none" />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Recording stop */}
+                {isRecMode && (
+                  <button
+                    type="button"
+                    onClick={recorder.stopRecording}
+                    className="w-14 h-14 flex items-center justify-center rounded-full bg-danger text-white animate-pulse-recording cursor-pointer shadow-lg"
+                    aria-label="Stop recording"
+                  >
+                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="6" width="12" height="12" rx="2" />
+                    </svg>
+                  </button>
+                )}
+                {isRecMode && (
+                  <span className="text-base font-mono text-danger tabular-nums font-medium">
+                    {formatTime(recorder.recordingTime)}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Compact full-playback link */}
+            {fullAudio.totalCount > 0 && (
               <button
                 type="button"
-                onClick={handleFullClick}
-                className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors cursor-pointer"
+                onClick={handleFullToggle}
+                className="flex items-center justify-center gap-1.5 mx-auto text-xs text-gray-400 hover:text-primary transition-colors cursor-pointer"
               >
                 {isFullPlaying ? (
                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="6" y="4" width="4" height="16" rx="1"/>
-                    <rect x="14" y="4" width="4" height="16" rx="1"/>
+                    <rect x="6" y="4" width="4" height="16" rx="1" />
+                    <rect x="14" y="4" width="4" height="16" rx="1" />
                   </svg>
                 ) : (
                   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="6,4 20,12 6,20"/>
+                    <polygon points="6,4 20,12 6,20" />
                   </svg>
                 )}
                 <span>
-                  {isFullPlaying ? 'Pause' : 'Play'} Full
-                  {currentIndex >= 0 ? ` · ${currentIndex + 1}/${totalCount}` : ` · ${totalCount} sentences`}
+                  {isFullPlaying ? 'Pause' : 'Play'} Full · {fullAudio.currentIndex >= 0 ? fullAudio.currentIndex + 1 : '-'} / {fullAudio.totalCount}
                 </span>
               </button>
             )}
-          </div>
-        ) : (
-          /* ---- Reading Mode ---- */
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleFullClick}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover transition-all duration-200 active:scale-95 cursor-pointer flex-shrink-0 shadow-md hover:shadow-lg"
-              aria-label={isFullPlaying ? 'Pause full' : 'Play full'}
-            >
-              {isFullPlaying ? (
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="6" y="4" width="4" height="16" rx="1"/>
-                  <rect x="14" y="4" width="4" height="16" rx="1"/>
-                </svg>
-              ) : (
-                <svg className="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="currentColor">
-                  <polygon points="6,4 20,12 6,20"/>
-                </svg>
-              )}
-            </button>
-            <div className="flex-1 min-w-0">
-              {totalCount > 0 ? (
-                <>
-                  <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all duration-300 ease-out"
-                      style={{ width: `${readingProgress}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-400 mt-1 tabular-nums">
-                    {currentIndex >= 0
-                      ? `${currentIndex + 1} / ${totalCount}`
-                      : `0 / ${totalCount}`}
-                  </p>
-                </>
-              ) : (
-                <p className="text-xs text-gray-400">No audio</p>
-              )}
-            </div>
           </div>
         )}
       </div>
