@@ -4,7 +4,7 @@ interface FrameworkTagProps {
 
 export function FrameworkTag({ framework }: FrameworkTagProps) {
   return (
-    <span className="inline-block bg-highlight-light text-highlight text-xs px-3 py-1 rounded-full font-medium">
+    <span className="inline-block bg-highlight-light text-highlight text-xs px-3 py-1 rounded-full font-medium max-w-full break-words">
       {framework}
     </span>
   );

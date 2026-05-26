@@ -83,6 +83,7 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentChunk, setCurrentChunk] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [soloHighlight, setSoloHighlight] = useState<number | null>(null);
   const totalChunks = chunks.length;
   const progress = totalChunks > 0 ? currentChunk / totalChunks : 0;
 
@@ -97,7 +98,7 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
 
   const handleToggle = () => {
     if (isPlaying) { window.speechSynthesis.cancel(); setIsPlaying(false); setIsComplete(false); }
-    else { setIsPlaying(true); setIsComplete(false); setCurrentChunk(0); playNextChunk(0); }
+    else { setIsPlaying(true); setIsComplete(false); setCurrentChunk(0); setSoloHighlight(null); playNextChunk(0); }
   };
 
   useEffect(() => { return () => { window.speechSynthesis.cancel(); }; }, []);
@@ -126,12 +127,15 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
             {paras.map((para, pi) => (
               <p key={pi} className="text-[20px] sm:text-[28px] font-normal text-gray-800 leading-[1.9] tracking-normal" style={{ textIndent: '2em' }}>
                 {para.map((chunk) => {
-                  const i = idx++; const active = isPlaying && i === currentChunk;
+                  const i = idx++; const active = (isPlaying && i === currentChunk) || soloHighlight === i;
                   return <Sentence key={chunk.id} text={chunk.text} active={active} onClick={() => {
                     window.speechSynthesis.cancel();
-                    if (isPlaying) setIsPlaying(false);
+                    setIsPlaying(false);
+                    setSoloHighlight(i);
                     const u = new SpeechSynthesisUtterance(chunk.text);
                     u.rate = 1;
+                    u.onend = () => setSoloHighlight(null);
+                    u.onerror = () => setSoloHighlight(null);
                     window.speechSynthesis.speak(u);
                   }} />;
                 }).reduce((prev, curr, i) => (i === 0 ? <>{prev}{curr}</> : <>{prev} {curr}</>))}
