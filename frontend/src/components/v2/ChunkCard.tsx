@@ -4,9 +4,8 @@
  */
 
 import { useState } from 'react';
-import { useAudioPlayer, formatTime } from '../hooks/useAudioPlayer';
+import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import type { ApiChunk } from '../types';
-import { colors, radius, shadow, spacing, transition, typography } from '../styles/tokens';
 
 interface ChunkCardProps {
   chunk: ApiChunk;
@@ -49,11 +48,11 @@ export function ChunkCard({ chunk, index, isActive, isHighlighted, onClick }: Ch
     const base = 'bg-white rounded-xl shadow-sm ring-1 transition-all duration-200 cursor-pointer';
 
     if (isHighlighted) {
-      return `${base} ring-2 ring-primary-500 shadow-glow`;
+      return `${base} ring-2 ring-sky-500 shadow-lg shadow-sky-500/20`;
     }
 
     if (isActive) {
-      return `${base} ring-primary-500/50 shadow-md`;
+      return `${base} ring-sky-500/50 shadow-md`;
     }
 
     return `${base} ring-black/5 hover:shadow-md hover:ring-black/10`;
@@ -70,16 +69,13 @@ export function ChunkCard({ chunk, index, isActive, isHighlighted, onClick }: Ch
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           <span
-            className="flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium"
-            style={{
-              backgroundColor: isActive ? colors.primary[100] : colors.neutral[100],
-              color: isActive ? colors.primary[700] : colors.neutral[600],
-            }}
+            className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium
+              ${isActive ? 'bg-sky-100 text-sky-700' : 'bg-gray-100 text-gray-600'}`}
           >
             {index + 1}
           </span>
           {(isPlaying || state === 'loading') && (
-            <span className="text-xs" style={{ color: colors.primary[500] }}>
+            <span className="text-xs text-sky-500">
               {state === 'loading' ? 'Loading...' : 'Playing...'}
             </span>
           )}
@@ -96,8 +92,7 @@ export function ChunkCard({ chunk, index, isActive, isHighlighted, onClick }: Ch
               aria-label="Replay"
             >
               <svg
-                className="w-4 h-4"
-                style={{ color: colors.neutral[500] }}
+                className="w-4 h-4 text-gray-500"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -117,8 +112,7 @@ export function ChunkCard({ chunk, index, isActive, isHighlighted, onClick }: Ch
             >
               {isPlaying ? (
                 <svg
-                  className="w-4 h-4"
-                  style={{ color: colors.primary[500] }}
+                  className="w-4 h-4 text-sky-500"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -127,8 +121,7 @@ export function ChunkCard({ chunk, index, isActive, isHighlighted, onClick }: Ch
                 </svg>
               ) : (
                 <svg
-                  className="w-4 h-4 ml-0.5"
-                  style={{ color: colors.primary[500] }}
+                  className="w-4 h-4 ml-0.5 text-sky-500"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -146,7 +139,7 @@ export function ChunkCard({ chunk, index, isActive, isHighlighted, onClick }: Ch
               }}
               className={`px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
                 isSlowMode
-                  ? 'bg-primary-100 text-primary-700'
+                  ? 'bg-sky-100 text-sky-700'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
               aria-label={isSlowMode ? 'Normal speed' : 'Slow mode'}
@@ -158,22 +151,13 @@ export function ChunkCard({ chunk, index, isActive, isHighlighted, onClick }: Ch
       </div>
 
       {/* Chunk text */}
-      <p
-        className="text-base sm:text-lg leading-relaxed"
-        style={{
-          color: colors.neutral[800],
-          lineHeight: typography.lineHeight.relaxed,
-        }}
-      >
+      <p className="text-base sm:text-lg leading-relaxed text-gray-800">
         {chunk.text}
       </p>
 
       {/* Error display */}
       {error && (
-        <div
-          className="mt-2 text-xs flex items-center gap-1"
-          style={{ color: colors.error }}
-        >
+        <div className="mt-2 text-xs flex items-center gap-1 text-red-500">
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="12" />
@@ -186,10 +170,7 @@ export function ChunkCard({ chunk, index, isActive, isHighlighted, onClick }: Ch
       {/* Progress indicator for TTS */}
       {isPlaying && (
         <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-primary-500 rounded-full animate-pulse"
-            style={{ width: '100%' }}
-          />
+          <div className="h-full bg-sky-500 rounded-full animate-pulse" style={{ width: '100%' }} />
         </div>
       )}
     </div>

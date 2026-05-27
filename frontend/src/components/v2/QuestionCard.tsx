@@ -3,7 +3,6 @@
  */
 
 import type { ApiQuestion } from '../../types';
-import { colors, radius, shadow, spacing, typography } from '../../styles/tokens';
 
 interface QuestionCardProps {
   question: ApiQuestion;
@@ -17,37 +16,26 @@ export function QuestionCard({ question, index, isSelected, onClick }: QuestionC
     <button
       type="button"
       onClick={onClick}
-      className="text-left transition-all duration-200 active:scale-[0.98]"
-      style={{
-        backgroundColor: isSelected ? colors.primary[500] : colors.surface.default,
-        borderRadius: radius.xl,
-        boxShadow: isSelected ? shadow.md : shadow.sm,
-        padding: spacing[4] + ' ' + spacing[5],
-        border: isSelected ? 'none' : '1px solid ' + colors.border.default,
-      }}
+      className={`text-left transition-all duration-200 active:scale-[0.98] px-5 py-4 rounded-xl
+        ${isSelected
+          ? 'bg-sky-500 text-white shadow-md'
+          : 'bg-white text-gray-800 shadow-sm ring-1 ring-black/5 hover:shadow-md'
+        }`}
     >
       {/* Question number badge */}
       <div className="flex items-start gap-3">
         <span
-          className="flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium flex-shrink-0"
-          style={{
-            backgroundColor: isSelected
-              ? 'rgba(255, 255, 255, 0.2)'
-              : colors.primary[100],
-            color: isSelected ? colors.surface.default : colors.primary[700],
-          }}
+          className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium flex-shrink-0
+            ${isSelected
+              ? 'bg-white/20 text-white'
+              : 'bg-sky-100 text-sky-700'
+            }`}
         >
           {index + 1}
         </span>
 
         {/* Question text */}
-        <span
-          className="text-sm font-medium line-clamp-2"
-          style={{
-            color: isSelected ? colors.surface.default : colors.neutral[800],
-            fontFamily: typography.fontFamily.sans,
-          }}
-        >
+        <span className="text-sm font-medium line-clamp-2 font-sans">
           {question.question}
         </span>
       </div>
