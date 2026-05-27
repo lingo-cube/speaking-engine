@@ -18,7 +18,7 @@ function Sentence({ text, active, onClick }: { text: string; active: boolean; on
       onKeyDown={(e) => { if (e.key === 'Enter') { onClick(); }}}
       className={`inline cursor-pointer transition-all duration-300 rounded-sm select-none
         ${active
-          ? 'bg-primary/20 shadow-[0_0_16px_rgba(88,204,2,0.25)]'
+          ? 'bg-primary/20 shadow-[0_0_16px_var(--color-primary-hover-light,rgba(88,204,2,0.25))]'
           : 'hover:bg-primary/5'}`}
       style={{ touchAction: 'manipulation' }}
     >
@@ -39,7 +39,7 @@ function CircularPlayer({ isPlaying, progress, isComplete, onToggle }: {
         key={isComplete ? 'done' : isPlaying ? 'playing' : 'idle'}
         initial={{ y: -6, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className={`text-sm font-extrabold ${isComplete ? 'text-green-500' : isPlaying ? 'text-primary' : 'text-gray-400'}`}
+        className={`text-sm font-extrabold ${isComplete ? 'text-[var(--color-success)]' : isPlaying ? 'text-[var(--color-primary)]' : 'text-gray-400'}`}
       >
         {isComplete ? 'Ready!' : isPlaying ? 'Playing...' : 'Tap to listen'}
       </motion.p>
@@ -48,7 +48,7 @@ function CircularPlayer({ isPlaying, progress, isComplete, onToggle }: {
           <svg className="absolute inset-0 w-full h-full -rotate-90">
             <circle cx="56" cy="56" r={radius} fill="none" stroke="#e5e7eb" strokeWidth="3" />
             <circle cx="56" cy="56" r={radius} fill="none"
-              stroke={isComplete ? '#22c55e' : 'var(--theme-primary, #58CC02)'} strokeWidth="3"
+              stroke={isComplete ? 'var(--color-success)' : 'var(--color-primary)'} strokeWidth="3"
               strokeDasharray={circumference}
               strokeDashoffset={isComplete ? 0 : circumference * (1 - Math.min(progress, 1))}
               strokeLinecap="round"
@@ -58,9 +58,9 @@ function CircularPlayer({ isPlaying, progress, isComplete, onToggle }: {
         )}
         <motion.button whileTap={{ scale: 0.88 }} onClick={onToggle}
           className={`w-24 h-24 flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer z-10 border-[4px]
-            ${isComplete ? 'bg-green-500 border-green-600 text-white shadow-xl shadow-green-500/30'
-              : isPlaying ? 'bg-primary border-primary-hover text-white shadow-xl shadow-primary/30'
-                : 'bg-white border-gray-200 text-primary hover:border-primary/30 hover:shadow-lg'}`}
+            ${isComplete ? 'bg-[var(--color-success)] border-[var(--color-success)] text-white shadow-[var(--color-success)]/30'
+              : isPlaying ? 'bg-[var(--color-primary)] border-[var(--color-primary-hover)] text-white shadow-[var(--color-primary)]/30'
+                : 'bg-white border-[var(--color-surface-200)] text-[var(--color-primary)] hover:border-[var(--color-primary)]/30 hover:shadow-lg'}`}
           aria-label={isPlaying ? 'Pause' : isComplete ? 'Done' : 'Play'}
         >
           {isComplete ? (
@@ -120,7 +120,7 @@ export function FullAnswerView({ question, chunks, onStartShadowing }: FullAnswe
           <TypeTag type={question.type} />
           <FrameworkTag framework={question.framework} />
         </div>
-        <h1 className="text-[28px] sm:text-[40px] font-extrabold text-gray-900 leading-[1.2] mb-12 tracking-tight text-center" style={{ textShadow: '0 2px 12px rgba(88,204,2,0.15)' }}>
+        <h1 className="text-[28px] sm:text-[40px] font-extrabold text-gray-900 leading-[1.2] mb-12 tracking-tight text-center" style={{ textShadow: '0 2px 12px var(--color-primary-hover-light)' }}>
           {question.question}
         </h1>
         {/* Sample answer card — matching chunk card style */}

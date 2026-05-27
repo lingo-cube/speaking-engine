@@ -3,11 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getQuestionsByTopicCode, getAnswerByQuestionId, getTopicByCode } from '../mock/data';
 import type { ApiQuestion } from '../types';
 import { ArticleView } from '../components/ArticleView';
+import { BottomSheet } from '../components/BottomSheet';
+import { NextPreviewBar } from '../components/NextPreviewBar';
 
 export function PracticePage() {
   const { topicCode } = useParams<{ topicCode: string }>();
   const navigate = useNavigate();
   const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
 
   const topic = topicCode ? getTopicByCode(topicCode) : undefined;
   const questions = topicCode ? getQuestionsByTopicCode(topicCode) : [];
@@ -46,7 +50,7 @@ export function PracticePage() {
   }, [nextQuestion]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-[var(--color-surface-50)]">
       <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
         {/* Compact header with topic nav and question position */}
         <header className="mb-6">
@@ -125,7 +129,7 @@ export function PracticePage() {
 
           {/* Desktop sidebar */}
           <aside className="hidden lg:block w-72 flex-shrink-0">
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-[var(--space-item)]">
               {questions.map((question: ApiQuestion) => (
                 <button
                   key={question.id}
@@ -152,6 +156,8 @@ export function PracticePage() {
                   key={selectedQuestion.id}
                   question={selectedQuestion}
                   chunks={answer?.chunks ?? []}
+                  activeIndex={activeIndex}
+                  onActiveIndexChange={setActiveIndex}
                 />
               </div>
             ) : (
@@ -169,7 +175,41 @@ export function PracticePage() {
             )}
           </main>
         </div>
-      </div>
+
+        {/* Mobile components */}
+        {activeIndex === null && (
+          <>
+            <NextPreviewBar
+              currentQuestionId={selectedQuestionId}
+              onOpenBottomSheet={() => setBottomSheetOpen(true)}
+            />
+          </>
+        )}
+        <BottomSheet
+          isOpen={bottomSheetOpen}
+          onClose={() => setBottomSheetOpen(false)}
+        >
+          <nav className="flex flex-col gap-2 p-4">
+            {questions.map((question: ApiQuestion) => (
+              <button
+                key={question.id}
+                type="button"
+                onClick={() => {
+                  setSelectedQuestionId(question.id);
+                  setBottomSheetOpen(false);
+                }}
+                className={`text-left px-4 py-3 rounded-xl text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]
+                  ${selectedQuestionId === question.id
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'bg-white text-gray-700 hover:bg-[var(--color-surface-100)] shadow-sm'
+                  }`}
+              >
+                <span className="block font-medium truncate">{question.question}</span>
+              </button>
+            ))}
+          </nav>
+        </BottomSheet>
+      </>
     </div>
   );
 }

@@ -40,7 +40,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
   });
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-gradient-to-b from-primary/5 via-white to-white">
+    <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-gradient-to-b from-[var(--color-primary)]/5] via-white to-white">
       {/* Progress bar at top */}
       <div className="px-4 pt-4 pb-2">
         <div className="flex items-center gap-3 max-w-md mx-auto">
@@ -79,7 +79,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
               className="flex flex-col items-center gap-4"
             >
               <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 0.4, delay: 0.1 }}
-                className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center"
+                className="w-20 h-20 rounded-full bg-[var(--color-primary-light)] flex items-center justify-center"
               >
                 <svg className="w-10 h-10 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><polyline points="20,6 9,17 4,12"/></svg>
               </motion.div>
@@ -106,7 +106,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.15 }}
                   className="text-[22px] sm:text-[28px] font-bold text-gray-900 leading-[1.6] tracking-normal"
-                  style={{ textDecoration: 'underline', textDecorationColor: '#58CC02', textDecorationStyle: 'wavy', textUnderlineOffset: '8px', textDecorationThickness: '1.5px' }}
+                  style={{ textDecoration: 'underline', textDecorationColor: 'var(--color-primary)', textDecorationStyle: 'wavy', textUnderlineOffset: '8px', textDecorationThickness: '1.5px' }}
                 >
                   {current.text}
                 </motion.p>

@@ -4,156 +4,38 @@ IELTS speaking practice system — structured sentence-level shadowing with teac
 
 ---
 
-## Two Independent Projects
+## File Index
 
-This repository contains **two separate projects** with clear boundaries:
-
-|                    | Backend                        | Frontend                          |
-| ------------------ | ------------------------------ | --------------------------------- |
-| **Directory**      | `./backend/`                   | `./frontend/`                     |
-| **Language**       | Go 1.21+                       | TypeScript 5 + React 18           |
-| **Framework**      | Gin + GORM                     | Vite + TailwindCSS 4              |
-| **Database**       | MySQL                          | None (mock data at dev time)      |
-| **Package manager** | Go modules (`backend/go.mod`) | npm (`frontend/package.json`)     |
-| **Dev server**     | `cd backend && go run cmd/main.go` | `cd frontend && npm run dev`  |
-| **Build**          | `cd backend && go build ./...` | `cd frontend && npm run build`    |
-| **Lint**           | `cd backend && go vet ./...`   | `cd frontend && npm run lint`     |
-| **Type check**     | `cd backend && go vet ./...`   | `cd frontend && npx tsc --noEmit` |
-| **Test**           | `cd backend && go test ./...`  | —                                 |
-
-**The frontend is fully self-contained.** It uses mock data from `frontend/src/mock/data.ts` and does not require the backend to run. The backend serves the REST API independently.
-
-### Why a monorepo?
-
-- Both projects share the same domain model (topics, questions, answers, chunks)
-- A single PR can deliver a full-stack feature
-- One CI/CD pipeline, one issue tracker, one release cycle
+| File | Purpose |
+| ---- | ------- |
+| [CLAUDE.md](CLAUDE.md) | This file — project entry point |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Architecture, deployment, and workflows |
+| [docs/PRD/](docs/PRD/) | Product requirements documents |
+| [openspec/](openspec/) | Specs, design, and tasks |
 
 ---
 
-## GitHub Flow
-
-This project follows **GitHub Flow** — a lightweight, branch-based workflow.
+## Workflow
 
 ```
-main (production)
-  └── feature/my-feature (work branch)
-       │
-       ├── commit 1
-       ├── commit 2
-       └── PR → review → merge → deploy
+Idea/Brainstorming → PRD → OpenSpec Propose → Explore → Worktree → Apply → Verify → Fix/Iterate → Archive → Merge
 ```
+ 阶段 | 命令 | 用途与核心铁律 (Harness Constraints) |
+|------|------|------|
+| **探索想法** | `/brainstorming` | **从想法生成/改造 PRD**。聚焦雅思考生痛点、心理焦虑与产品交互玩法，严禁涉及任何代码细节与持久化设计。最终在 `docs/PRD/` 产出业务规则与 Explore Backlog。 |
+| **创建提案** | `/opsx:propose` | **基于 PRD 创建变更提案，执行【契约守门人】卡点**。必须首先对照 `ARCHITECTURE.md` 评估变更范围。若发现提案试图绕过已有抽象层 Interface、破坏现有协议或分层架构，**必须立刻中断并触发【红牌拦截警告】**，拒绝生成提案。 |
+| **深入设计** | `/opsx:explore` | **探索设计细节、技术方案**。聚焦”接口断层扫描”与”网络管道对齐”，跳过具体逻辑实现行。在 `openspec/` 沉淀出技术位置、新增 Interface 声明、Mermaid 通信时序图，并拆解出由原子任务组成的 `tasks.md`。 |
+| **UI/UX 设计评审** | `/impeccable` | **apply 前必需关卡：设计评审通过后才能 apply**。若变更涉及 UI/UX（新界面、交互流程修改、视觉调整、移动端适配），必须调用 `/impeccable` 进行设计评审，确认方案合理性、交互流畅性、可访问性后再进入实施阶段。 |
+| **启动实施** | `git worktree add -b feature/<name> .git/worktrees/<name> main` | **开启 feature 分支**。利用 Git Worktree 隔离技术开辟完全独立的临时物理工作空间，确保 `main` 分支在开发中绝对干净、不受污染。 |
+| **实施变更** | `/opsx:apply` | **按 tasks.md 逐项实施变更**。化身为精准的“执行器”，严格按照 OpenSpec 拆解出的原子任务清单依次编写代码，严禁脱离清单自由发挥、擅自修改不相关文件。 |
+| **验证功能** | `/run` / `/verify` | **运行应用，执行【双盲验证】流程**。<br>1. **🧪 前端自闭环验证**：完全断开后端，验证 `frontend/src/mock/data.ts` 是否适配新 TS 类型且 100% 独立跑通交互。<br>2. **🧪 全栈联调验证**：开启后端内存存储（STORAGE_PROVIDER=mock），进行端到端通信验证，确保 JSON Schema 契约契合且 JWT 鉴权通过（没加鉴权则跳过）。<br>3. **🧪 UI/UX 实施审查**：若涉及 UI/UX 变更，使用 `/impeccable` 检查视觉效果、交互响应、移动端适配、边界状态，确保实施与设计方案一致。 |
+| **归档变更** | `/opsx:archive` | **归档变更并生成终结指令**。将 Spec 草案转为正式规格，打印 PR Body 报告，并在终端打印出人类专用的【一键合并销毁命令】。 |
+| **合并主干** | *人类手动在终端执行* | **人类迁回主目录并完成最终合并**。人类在终端粘贴/执行 AI 留下的终结指令，安全销毁 AI 临时工作区，在主干上完成合并与分支清理。 |
 
-### Step by step
-
-1. **Create a feature branch from `main`**
-
-   Use git worktrees for isolation (recommended):
-   ```
-   /using-git-worktrees
-   ```
-   This creates an isolated workspace so you can work on the feature without affecting your main checkout.
-
-   Or manually:
-   ```bash
-   git checkout main && git pull
-   git checkout -b feature/my-feature
-   ```
-
-2. **Work on the feature**
-
-   Develop backend and/or frontend changes. Commit small, logical units.
-
-3. **Review before pushing**
-
-   Run the review skill to catch issues early:
-   ```
-   /review
-   ```
-   This checks for code quality, security issues, regressions, and consistency across the change set.
-
-4. **Open a Pull Request against `main`**
-
-   CI will automatically:
-   - **Backend changed?** → Go lint, build, test
-   - **Frontend changed?** → ESLint, TypeScript check, Vite build, preview deploy
-
-   Fix any CI failures before requesting review.
-
-5. **Merge to `main`**
-
-   After approval and green CI, merge via squash or rebase.
-
-6. **Deploy (automatic)**
-
-   On merge to `main`:
-   - Frontend deploys to GitHub Pages (`gh-pages` branch)
-   - Backend is build-verified (manual deploy for now)
 
 ---
 
-## Development
-
-### Backend (`./backend/`)
-
-```bash
-cd backend
-
-# Run with mock storage (no MySQL needed for dev)
-STORAGE_PROVIDER=mock go run cmd/main.go
-
-# Run with seed data (populates sample IELTS content)
-STORAGE_PROVIDER=mock go run cmd/main.go -seed
-
-# Quality checks
-go build ./...
-go vet ./...
-go test ./...
-```
-
-### Frontend (`./frontend/`)
-
-```bash
-cd frontend
-
-# Install dependencies (first time only)
-npm install
-
-# Development server with HMR
-npm run dev
-
-# Quality checks before commit
-npm run lint
-npx tsc --noEmit
-npm run build
-```
-
-The frontend uses mock data by default. All pages and components work without a running backend.
-
----
-
-## CI/CD Pipelines
-
-### Backend CI (`.github/workflows/backend-ci.yml`)
-
-**Triggers**: Push/PR to `main` when Go files change (`**.go`, `go.mod`, `go.sum`)
-
-| Step      | On PR | On push to main |
-| --------- | ----- | --------------- |
-| Go lint   | ✅    | ✅              |
-| Go build  | ✅    | ✅              |
-| Go test   | ✅    | ✅              |
-
-### Frontend Deploy (`.github/workflows/deploy.yml`)
-
-**Triggers**: Push/PR to `main` when frontend files change (`frontend/**`, workflow file)
-
-| Step        | On PR | On push to main |
-| ----------- | ----- | --------------- |
-| ESLint      | ✅    | ✅              |
-| Type check  | ✅    | ✅              |
-| Vite build  | ✅    | ✅              |
-| Deploy      | —     | ✅ (gh-pages)   |
+**Architecture & Deployment** → [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ---
 
@@ -162,85 +44,24 @@ The frontend uses mock data by default. All pages and components work without a 
 ```
 speaking-engine/
 │
-├── backend/                     # Go backend — independent project
-│   ├── cmd/main.go              # Entry point
-│   ├── internal/
-│   │   ├── config/              # Viper config (env vars)
-│   │   ├── handler/             # Gin HTTP handlers (REST)
-│   │   ├── middleware/           # CORS, logging, errors
-│   │   ├── model/               # GORM models (Topic, Question, Answer, Chunk)
-│   │   ├── repository/          # Database access layer
-│   │   ├── service/             # Business logic + sentence splitting
-│   │   └── storage/             # File storage abstraction (OSS, mock, future S3/R2)
-│   ├── seeds/                   # Sample IELTS data
-│   ├── go.mod / go.sum
+├── backend/                     # Go backend
+│   ├── internal/                # Core packages
+│   ├── cmd/
+│   └── seeds/
 │
-├── frontend/                    # React frontend — independent project
+├── frontend/                    # React frontend
 │   ├── src/
-│   │   ├── components/          # 8 reusable components
-│   │   │   ├── AudioPlayer.tsx
-│   │   │   ├── ChunkCard.tsx
-│   │   │   ├── FrameworkTag.tsx
-│   │   │   ├── QuestionCard.tsx
-│   │   │   ├── RecordButton.tsx
-│   │   │   ├── ShadowingPanel.tsx
-│   │   │   ├── TopicCard.tsx
-│   │   │   └── TypeTag.tsx
-│   │   ├── hooks/               # useAudioPlayer, useRecorder
-│   │   ├── mock/                # Mock data (15 questions with answers)
-│   │   ├── pages/               # TopicListPage, PracticePage
-│   │   ├── types/               # TypeScript interfaces
-│   │   ├── App.tsx              # React Router setup
-│   │   └── main.tsx             # Entry point
-│   ├── package.json
-│   ├── vite.config.ts
-│   └── tsconfig.json
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   └── types/
+│   └── package.json
 │
-├── .github/workflows/           # CI/CD pipelines
-│   ├── backend-ci.yml           # Backend: lint, build, test
-│   └── deploy.yml               # Frontend: lint, check, build, deploy
+├── docs/                        # Documentation
+│   └── PRD/                     # Product requirements documents
+│
 ├── openspec/                    # Specs, design, tasks
-├── PRD.md                       # Product requirements
-└── CLAUDE.md                    # This file
+├── .github/                     # CI/CD workflows
+├── ARCHITECTURE.md              # Architecture & workflows
+└── CLAUDE.md                    # Project entry point
 ```
-
----
-
-## Worktree Quick Reference
-
-Create an isolated workspace before starting any feature:
-
-```
-/using-git-worktrees
-```
-
-This spawns a new git worktree, leaving your main checkout untouched.
-
-```bash
-# Manual equivalent
-git worktree add -b feature/my-change ../speaking-engine-wt main
-```
-
-When the feature is done and merged, clean up:
-```bash
-git worktree remove ../speaking-engine-wt
-git branch -d feature/my-change
-```
-
----
-
-## Code Review Checklist
-
-Before opening a PR, run:
-```
-/review
-```
-
-Manual checklist for reviewers:
-- [ ] Backend: builds, vets, tests pass
-- [ ] Frontend: lint, type-check, build pass
-- [ ] Mock data still works (frontend runs without backend)
-- [ ] No hardcoded URLs or credentials
-- [ ] New endpoints have corresponding handlers
-- [ ] Storage interface is used (not direct OSS/S3 calls)
-- [ ] Mobile-first responsive layout preserved

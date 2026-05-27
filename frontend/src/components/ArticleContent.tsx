@@ -43,7 +43,7 @@ export function ArticleContent({ chunks, activeIndex, highlightedIndex, onSenten
         const startIndex = chunkIndex;
         chunkIndex += group.length;
         return (
-          <p key={groupIdx} className={groupIdx > 0 ? 'mt-4' : ''} style={{ textIndent: '2em' }}>
+          <p key={groupIdx} className={groupIdx > 0 ? 'mt-[var(--space-group)]' : ''} style={{ textIndent: '2em' }}>
             <span className="text-lg text-gray-800 leading-relaxed tracking-normal">
               {group.map((chunk, idx) => {
                 const flatIdx = startIndex + idx;

@@ -8,25 +8,26 @@ import { FrameworkTag } from './FrameworkTag';
 interface ArticleViewProps {
   chunks: ApiChunk[];
   question: ApiQuestion;
+  activeIndex: number | null;
+  onActiveIndexChange: (index: number | null) => void;
 }
 
-export function ArticleView({ chunks, question }: ArticleViewProps) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+export function ArticleView({ chunks, question, activeIndex, onActiveIndexChange }: ArticleViewProps) {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const handleSentenceClick = useCallback((index: number) => {
-    setActiveIndex((prev) => (prev === index ? null : index));
-  }, []);
+    onActiveIndexChange(index);
+  }, [onActiveIndexChange]);
 
   const selectedChunk = activeIndex !== null ? chunks[activeIndex] : null;
 
   const handleCloseTraining = useCallback(() => {
-    setActiveIndex(null);
-  }, []);
+    onActiveIndexChange(null);
+  }, [onActiveIndexChange]);
 
   return (
-    <div className="space-y-4 pb-36">
-      <div className="bg-white rounded-2xl shadow-md ring-1 ring-gray-900/5 p-6 sm:p-8 animate-fade-in">
+    <div className="pb-36" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-item)' }}>
+      <div className="bg-white rounded-2xl shadow-md ring-1 ring-gray-900/5 sm:p-8 animate-fade-in" style={{ padding: 'var(--space-group)' }}>
         {/* Question header inside the article card */}
         <div className="mb-6">
           <div className="flex flex-wrap gap-2 mb-3">
