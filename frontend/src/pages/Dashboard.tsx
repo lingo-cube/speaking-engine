@@ -71,7 +71,7 @@ export function Dashboard() {
         {/* Topic Grid */}
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-6">Choose a Topic</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-stretch">
             {mockTopics.map((topic, index) => (
               <motion.div
                 key={topic.id}
