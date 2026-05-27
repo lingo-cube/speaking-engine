@@ -15,7 +15,7 @@ export function TopicListPage() {
   const topics = getTopicsByCategory(activeCategory);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-grid-pattern">
       <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
         <header className="mb-8" style={{ paddingTop: 'var(--space-section)', paddingBottom: 'var(--space-item)' }}>
           <div className="bg-gradient-to-b from-[var(--color-primary-light)] to-transparent pb-4">

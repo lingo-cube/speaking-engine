@@ -56,7 +56,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
               transition={{ duration: 0.5, ease: 'easeOut' }}
             />
           </div>
-          <span className="text-sm font-extrabold text-primary tabular-nums">{completed}/{chunks.length}</span>
+          <span className="text-sm font-extrabold text-orange-600 tabular-nums">{completed}/{chunks.length}</span>
         </div>
         {/* Dot pills */}
         <div className="flex items-center justify-center gap-1.5 mt-2">
@@ -64,7 +64,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
             <div
               key={i}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                done ? 'bg-primary scale-100' : now ? 'bg-primary scale-125 ring-2 ring-primary/30' : 'bg-gray-200'
+                done ? 'bg-orange-500 scale-100' : now ? 'bg-orange-500 scale-125 ring-2 ring-orange-200' : 'bg-orange-100'
               }`}
             />
           ))}
@@ -94,19 +94,19 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
             >
               {/* Badge — outside card */}
               <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}
-                className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-extrabold"
+                className="inline-flex items-center px-4 py-1.5 rounded-full bg-orange-100 text-orange-700 text-sm font-extrabold"
               >
                 Sentence {currentIndex + 1}
               </motion.div>
 
               {/* Chunk card — just the text */}
-              <div className="bg-white rounded-3xl border-2 border-primary/15 shadow-lg shadow-primary/5 px-8 sm:px-12 py-10 sm:py-14">
+              <div className="bg-white rounded-3xl border-2 border-orange-100 shadow-lg shadow-orange-100/50 px-8 sm:px-12 py-10 sm:py-14">
                 <motion.p
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.15 }}
                   className="text-[22px] sm:text-[28px] font-bold text-gray-900 leading-[1.6] tracking-normal"
-                  style={{ textDecoration: 'underline', textDecorationColor: 'var(--color-primary)', textDecorationStyle: 'wavy', textUnderlineOffset: '8px', textDecorationThickness: '1.5px' }}
+                  style={{ textDecoration: 'underline', textDecorationColor: '#FDB827', textDecorationStyle: 'wavy', textUnderlineOffset: '8px', textDecorationThickness: '1.5px' }}
                 >
                   {current.text}
                 </motion.p>
@@ -134,8 +134,8 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
             <motion.button whileTap={{ scale: 0.88 }} onClick={() => isPlaying ? pause() : play()}
               className={`w-[80px] h-[80px] flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer border-[3px]
                 ${isPlaying
-                  ? 'bg-primary border-primary-hover text-white shadow-xl shadow-primary/30'
-                  : 'bg-white border-gray-200 text-primary hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10'}`}
+                  ? 'bg-orange-500 border-orange-600 text-white shadow-xl shadow-orange-200'
+                  : 'bg-white border-orange-200 text-orange-600 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-100'}`}
             >
               {isPlaying ? (
                 <svg className="w-9 h-9" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>
@@ -150,8 +150,8 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
                 onClick={() => isRecording ? stopRecording() : startRecording()}
                 className={`w-[80px] h-[80px] flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer border-[3px]
                   ${isRecording
-                    ? 'bg-danger border-red-700 text-white shadow-xl shadow-danger/30 animate-pulse-recording'
-                    : 'bg-white border-danger/20 text-danger hover:border-danger/50 hover:shadow-lg hover:shadow-danger/10'}`}
+                    ? 'bg-rose-500 border-rose-600 text-white shadow-xl shadow-rose-200 animate-pulse-recording'
+                    : 'bg-white border-rose-200 text-rose-500 hover:border-rose-400 hover:shadow-lg hover:shadow-rose-100'}`}
               >
                 {isRecording ? (
                   <svg className="w-9 h-9" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
@@ -162,7 +162,7 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
             ) : (
               <div className="flex flex-col items-center gap-2">
                 <button onClick={playRecording}
-                  className="px-5 py-2.5 rounded-2xl bg-green-50 text-green-600 hover:bg-green-100 transition-all cursor-pointer text-sm font-extrabold border-2 border-green-100 active:scale-95"
+                  className="px-5 py-2.5 rounded-2xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-all cursor-pointer text-sm font-extrabold border-2 border-emerald-100 active:scale-95"
                 >
                   Play my voice
                 </button>
@@ -199,9 +199,9 @@ export function ShadowingView({ chunks, currentIndex, completedChunks, onComplet
             className={`w-full py-4 rounded-2xl font-extrabold text-[16px] transition-all duration-200 cursor-pointer border-b-[4px]
               ${canAdvance
                 ? isLast
-                  ? 'bg-green-500 border-green-700 text-white active:border-b-0 active:mt-1 shadow-lg shadow-green-500/20'
-                  : 'bg-primary border-primary-hover text-white active:border-b-0 active:mt-1 shadow-lg shadow-primary/20'
-                : 'bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed'}`}
+                  ? 'bg-emerald-500 border-emerald-600 text-white active:border-b-0 active:mt-1 shadow-lg shadow-emerald-200'
+                  : 'bg-orange-500 border-orange-600 text-white active:border-b-0 active:mt-1 shadow-lg shadow-orange-200'
+                : 'bg-orange-50 border-orange-100 text-orange-300 cursor-not-allowed'}`}
           >
             {!canAdvance ? 'Record to continue' : isLast ? 'Complete!' : 'Next'}
           </motion.button>

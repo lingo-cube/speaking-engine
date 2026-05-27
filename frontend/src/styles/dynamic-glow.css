@@ -1,0 +1,39 @@
+/* Dynamic Glow Component - V7 */
+
+/* Fixed positioned glow in top-right corner */
+.bg-glow {
+  position: fixed;
+  top: var(--bg-glow-offset-y);
+  right: var(--bg-glow-offset-x);
+  width: var(--bg-glow-size);
+  height: var(--bg-glow-size);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--decoration-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 1;
+}
+
+/* Reading mode glow (green) */
+.bg-glow[data-mode="reading"] {
+  --decoration-glow: var(--glow-reading);
+}
+
+/* Training mode glow (orange) */
+.bg-glow[data-mode="training"] {
+  --decoration-glow: var(--glow-training);
+}
+
+/* Animation for glow mode switch */
+@supports (transition) {
+  .bg-glow {
+    transition: background 0.3s ease-out;
+  }
+}
+
+/* Reduce motion preference support */
+@media (prefers-reduced-motion: reduce) {
+  .bg-glow {
+    opacity: 0.6;
+  }
+}

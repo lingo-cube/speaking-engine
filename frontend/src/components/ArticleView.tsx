@@ -1,19 +1,23 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { ApiChunk, ApiQuestion } from '../types';
 import { ArticleContent } from './ArticleContent';
 import { BottomControlBar } from './BottomControlBar';
 import { TypeTag } from './TypeTag';
 import { FrameworkTag } from './FrameworkTag';
+import { ProgressBand } from './ProgressBand';
+import { CelebrationConfetti } from './CelebrationConfetti';
 
 interface ArticleViewProps {
   chunks: ApiChunk[];
   question: ApiQuestion;
   activeIndex: number | null;
   onActiveIndexChange: (index: number | null) => void;
+  progress?: number;
 }
 
-export function ArticleView({ chunks, question, activeIndex, onActiveIndexChange }: ArticleViewProps) {
+export function ArticleView({ chunks, question, activeIndex, onActiveIndexChange, progress = 0 }: ArticleViewProps) {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [celebrateTrigger, setCelebrateTrigger] = useState(false);
 
   const handleSentenceClick = useCallback((index: number) => {
     onActiveIndexChange(index);
@@ -25,8 +29,16 @@ export function ArticleView({ chunks, question, activeIndex, onActiveIndexChange
     onActiveIndexChange(null);
   }, [onActiveIndexChange]);
 
+  useEffect(() => {
+    if (activeIndex !== null && activeIndex === chunks.length - 1) {
+      setCelebrateTrigger(true);
+    }
+  }, [activeIndex, chunks.length]);
+
   return (
     <div className="pb-36" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-item)' }}>
+      <CelebrationConfetti trigger={celebrateTrigger} onTriggered={() => setCelebrateTrigger(false)} />
+      <ProgressBand progress={progress} ariaLabel="Shadowing progress" />
       <div className="bg-white rounded-2xl shadow-md ring-1 ring-gray-900/5 sm:p-8 animate-fade-in" style={{ padding: 'var(--space-group)' }}>
         {/* Question header inside the article card */}
         <div className="mb-6">

@@ -39,6 +39,31 @@
   --space-group: clamp(24px, 4vw, 48px);    /* 分组分离 */
   --space-item: clamp(12px, 2vw, 24px);     /* 元素间距 */
   --space-tight: clamp(6px, 1vw, 12px);      /* 紧凑分组 */
+
+  /* ========== V7: 背景图案 Token ========== */
+  --bg-grid-size: 40px;
+  --bg-grid-opacity: 0.2;
+  --bg-glow-size: 600px;
+  --bg-glow-offset-x: 20%;
+  --bg-glow-offset-y: -10%;
+
+  /* ========== V7: 模式光晕色 ========== */
+  --glow-reading: oklch(90% 0.12 145);  /* 绿 */
+  --glow-training: oklch(90% 0.12 50);    /* 橙 */
+
+  /* ========== V7: 装饰色 ========== */
+  --decoration-glow: oklch(90% 0.12 145);
+
+  /* ========== V7: 卡片 tint Token ========== */
+  --card-tint-hover: 0.3;
+  --card-tint-selected: 1.0;
+
+  /* ========== V7: 庆祝动画 Token ========== */
+  --celebration-enabled: true;
+  --confetti-green-ratio: 0.6;
+  --confetti-orange-ratio: 0.3;
+  --confetti-teal-ratio: 0.1;
+  --celebration-duration: 1.2s;
 }
 
 /* ========== 浏览器兼容性回退 ========== */
