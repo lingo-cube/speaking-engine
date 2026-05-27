@@ -3,6 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getQuestionsByTopicCode, getAnswerByQuestionId, getTopicByCode } from '../mock/data';
 import type { ApiQuestion } from '../types';
 import { ArticleView } from '../components/ArticleView';
+import { features } from '../config/features';
+
+// V2 components with TTS support
+import { ArticleView as ArticleViewV2 } from '../components/v2';
+import { QuestionCard as QuestionCardV2 } from '../components/v2';
 
 export function PracticePage() {
   const { topicCode } = useParams<{ topicCode: string }>();
@@ -126,19 +131,14 @@ export function PracticePage() {
           {/* Desktop sidebar */}
           <aside className="hidden lg:block w-72 flex-shrink-0">
             <nav className="flex flex-col gap-2">
-              {questions.map((question: ApiQuestion) => (
-                <button
+              {questions.map((question: ApiQuestion, index: number) => (
+                <QuestionCardV2
                   key={question.id}
-                  type="button"
+                  question={question}
+                  index={index}
+                  isSelected={selectedQuestionId === question.id}
                   onClick={() => setSelectedQuestionId(question.id)}
-                  className={`text-left px-4 py-3 rounded-xl text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]
-                    ${selectedQuestionId === question.id
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'bg-white text-gray-700 hover:bg-gray-100 shadow-sm ring-1 ring-gray-900/5'
-                    }`}
-                >
-                  <span className="block font-medium truncate">{question.question}</span>
-                </button>
+                />
               ))}
             </nav>
           </aside>
@@ -147,12 +147,24 @@ export function PracticePage() {
           <main className="flex-1 min-w-0">
             {selectedQuestion ? (
               <div className="space-y-6">
-                <p className="text-xs text-gray-400">PracticePage: question #{selectedQuestion.id}, chunks: {answer?.chunks.length ?? 0}</p>
-                <ArticleView
-                  key={selectedQuestion.id}
-                  question={selectedQuestion}
-                  chunks={answer?.chunks ?? []}
-                />
+                {features.debug && (
+                  <p className="text-xs text-gray-400">
+                    PracticePage: question #{selectedQuestion.id}, chunks: {answer?.chunks.length ?? 0} | V2: {features.useV2Components ? 'ON' : 'OFF'}
+                  </p>
+                )}
+                {features.useV2Components ? (
+                  <ArticleViewV2
+                    key={selectedQuestion.id}
+                    question={selectedQuestion}
+                    chunks={answer?.chunks ?? []}
+                  />
+                ) : (
+                  <ArticleView
+                    key={selectedQuestion.id}
+                    question={selectedQuestion}
+                    chunks={answer?.chunks ?? []}
+                  />
+                )}
               </div>
             ) : (
               <div className="bg-white rounded-2xl shadow-md ring-1 ring-gray-900/5 p-12 text-center">
