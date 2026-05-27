@@ -1,6 +1,5 @@
 /**
- * V2 ArticleView - Unified article view with TTS support
- * Clean, card-based layout with consistent design
+ * Modern ArticleView - Beautiful layout with smooth animations
  */
 
 import { useState, useCallback } from 'react';
@@ -20,36 +19,40 @@ export function ArticleView({ chunks, question, onChunkSelect }: ArticleViewProp
   const handleChunkClick = useCallback((index: number) => {
     setActiveIndex((prev) => {
       const newIndex = prev === index ? null : index;
+      setHighlightedIndex(newIndex ?? -1);
       onChunkSelect?.(newIndex ?? -1);
       return newIndex;
     });
   }, [onChunkSelect]);
 
   return (
-    <div className="space-y-6 pb-16">
-      {/* Question Card */}
-      <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6 sm:p-8 mb-6">
+    <div className="space-y-8 pb-20">
+      {/* Question Card - Modern style */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl ring-1 ring-gray-900/5 p-8 sm:p-10 overflow-hidden relative">
+        {/* Decorative gradient background */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-sky-400/10 to-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
         {/* Question tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-sky-50 text-sky-700">
+        <div className="flex flex-wrap gap-2 mb-6 relative">
+          <span className="px-4 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-sky-400 to-indigo-500 text-white shadow-md shadow-sky-500/20">
             {question.type}
           </span>
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+          <span className="px-4 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
             {question.framework}
           </span>
         </div>
 
         {/* Question text */}
-        <h2 className="text-xl sm:text-2xl font-semibold leading-relaxed text-gray-900 font-sans">
+        <h2 className="text-2xl sm:text-3xl font-bold leading-relaxed text-gray-900 relative">
           {question.question}
         </h2>
 
-        {/* Divider */}
-        <div className="mt-6 border-b border-gray-100" />
+        {/* Decorative line */}
+        <div className="mt-8 h-1 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-full max-w-32" />
       </div>
 
-      {/* Chunks Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Chunks Grid - Modern layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {chunks.map((chunk, index) => (
           <ChunkCard
             key={chunk.id}
@@ -64,14 +67,14 @@ export function ArticleView({ chunks, question, onChunkSelect }: ArticleViewProp
 
       {/* Empty state */}
       {chunks.length === 0 && (
-        <div className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-12 text-center">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-sky-100">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl ring-1 ring-gray-900/5 p-16 text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-sky-400 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-sky-500/30">
             <svg
-              className="w-8 h-8 text-sky-500"
+              className="w-10 h-10 text-white"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.5"
+              strokeWidth="2"
             >
               <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
               <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
@@ -79,9 +82,8 @@ export function ArticleView({ chunks, question, onChunkSelect }: ArticleViewProp
               <line x1="8" y1="23" x2="16" y2="23" />
             </svg>
           </div>
-          <p className="text-gray-500">
-            No content available for this question.
-          </p>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">No content available</h3>
+          <p className="text-gray-500">This question doesn't have any practice content yet.</p>
         </div>
       )}
     </div>
