@@ -1,53 +1,62 @@
 @import "tailwindcss";
+@import "./tokens.css";
+@import "./styles/background-pattern.css";
+@import "./styles/dynamic-glow.css";
 
 @theme {
-  --color-primary: var(--theme-primary);
-  --color-primary-hover: var(--theme-primary-hover);
-  --color-primary-light: var(--theme-primary-light);
-  --color-danger: var(--theme-danger);
-  --color-danger-hover: var(--theme-danger-hover);
-  --color-highlight: var(--theme-highlight);
-  --color-highlight-light: var(--theme-highlight-light);
+  /* Original colors */
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-light: var(--color-primary-light);
+  --color-danger: var(--color-danger);
+  --color-danger-hover: var(--color-danger-hover);
+  --color-highlight: var(--color-warning);
+  --color-highlight-light: var(--color-warning-light);
+  --color-success: var(--color-success);
+  --color-tertiary: var(--color-tertiary);
+  --color-accent: var(--color-accent);
+  --color-surface-50: var(--color-surface-50);
+  --color-surface-100: var(--color-surface-100);
+  --color-surface-200: var(--color-surface-200);
+  --color-warning: var(--color-warning);
+  --color-warning-light: var(--color-warning-light);
+
+  /* V7 Warm Adult Colors */
+  --color-orange-50: #FFF7ED;
+  --color-orange-100: #FFEDD5;
+  --color-orange-200: #FED7AA;
+  --color-orange-400: #FB923C;
+  --color-orange-500: #F97316;
+  --color-orange-600: #EA580C;
+  --color-rose-100: #FFE4E6;
+  --color-rose-200: #FECDD3;
+  --color-rose-500: #F43F5E;
+  --color-rose-600: #E11D48;
+  --color-emerald-50: #ECFDF5;
+  --color-emerald-100: #D1FAE5;
+  --color-emerald-200: #A7F3D0;
+  --color-emerald-500: #10B981;
+  --color-emerald-600: #059669;
+
+  /* V7 Tokens */
+  --bg-grid-size: var(--bg-grid-size);
+  --bg-grid-opacity: var(--bg-grid-opacity);
+  --bg-glow-size: var(--bg-glow-size);
+  --bg-glow-offset-x: var(--bg-glow-offset-x);
+  --bg-glow-offset-y: var(--bg-glow-offset-y);
+  --glow-reading: var(--glow-reading);
+  --glow-training: var(--glow-training);
+  --decoration-glow: var(--decoration-glow);
+  --card-tint-hover: var(--card-tint-hover);
+  --card-tint-selected: var(--card-tint-selected);
+  --celebration-enabled: var(--celebration-enabled);
+  --confetti-green-ratio: var(--confetti-green-ratio);
+  --confetti-orange-ratio: var(--confetti-orange-ratio);
+  --confetti-teal-ratio: var(--confetti-teal-ratio);
+  --celebration-duration: var(--celebration-duration);
 }
 
-:root {
-  --theme-primary: #58CC02;
-  --theme-primary-hover: #46A302;
-  --theme-primary-light: #E8F8D5;
-  --theme-danger: #FF4B4B;
-  --theme-danger-hover: #E63939;
-  --theme-highlight: #FFC800;
-  --theme-highlight-light: #FFF7D6;
-}
-
-[data-theme="dark"] {
-  --theme-primary: #78E022;
-  --theme-primary-hover: #58CC02;
-  --theme-primary-light: #1A2E0A;
-  --theme-danger: #FF6B6B;
-  --theme-danger-hover: #FF4B4B;
-  --theme-highlight: #FFD633;
-  --theme-highlight-light: #2E2000;
-}
-
-body {
-  margin: 0;
-  font-family: 'Nunito', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
-  color: #1e293b;
-}
-
-body {
-  margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
-  color: #1e293b;
-}
-
+/* ========== Animations ========== */
 @keyframes pulse-recording {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
@@ -74,4 +83,42 @@ body {
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
+}
+
+/* ========== V7: 卡片 tint 类 ========== */
+.card-tint-hover {
+  background: color-mix(in srgb, var(--color-primary), var(--color-white)) calc(100% * var(--card-tint-hover));
+}
+
+.card-tint-selected {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* ========== V7: 三色渐变进度条 ========== */
+.progress-band {
+  background: linear-gradient(90deg,
+    var(--color-primary) 0%,
+    var(--color-tertiary) 50%,
+    var(--color-accent) 100%
+  );
+  height: 4px;
+  border-radius: 2px;
+  width: 100%;
+}
+
+/* ========== V7: Scale + Shadow ========== */
+.hover-scale-102 {
+  transform: scale(1.02);
+  transition: transform 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.hover-shadow-lg {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* ========== V7: ease-out 过渡类 ========== */
+.ease-out-200 {
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }

@@ -1,0 +1,96 @@
+/* Design Tokens - Speaking Engine V6
+ * OKLCH Color System + Semantic Spacing System
+ */
+
+:root {
+  /* ========== 主色系：成长绿 ========== */
+  --color-primary: oklch(70% 0.18 145);      /* 活力绿 */
+  --color-primary-hover: oklch(65% 0.18 145); /* 悬停深绿 */
+  --color-primary-light: oklch(96% 0.06 145); /* 浅绿背景 */
+  --color-primary-dark: oklch(45% 0.15 145);  /* 深绿文字 */
+
+  /* ========== 辅助色：活力橙 ========== */
+  --color-tertiary: oklch(75% 0.20 50);       /* 温暖橙 */
+  --color-tertiary-light: oklch(97% 0.08 50); /* 浅橙背景 */
+  --color-tertiary-dark: oklch(50% 0.16 50);  /* 深橙文字 */
+
+  /* ========== 强调色：专业青 ========== */
+  --color-accent: oklch(60% 0.14 210);        /* 深青 */
+  --color-accent-light: oklch(95% 0.05 210);  /* 浅青背景 */
+
+  /* ========== 语义色 ========== */
+  --color-success: oklch(70% 0.18 145);       /* 复用 primary */
+  --color-danger: oklch(65% 0.22 25);        /* 温柔红 */
+  --color-danger-hover: oklch(55% 0.20 25);  /* 深红悬停 */
+  --color-warning: oklch(80% 0.18 85);       /* 琥珀黄 */
+  --color-warning-light: oklch(98% 0.1 85);  /* 浅琥珀黄 */
+  --color-info: oklch(65% 0.14 210);         /* 复用 accent */
+  --color-primary-hover-light: oklch(98% 0.08 145); /* 浅绿阴影 */
+
+  /* ========== 暖调中性灰 ========== */
+  --color-surface-50: oklch(99% 0.008 50);    /* 极浅暖白 */
+  --color-surface-100: oklch(97% 0.008 50);   /* 浅暖灰 */
+  --color-surface-200: oklch(93% 0.006 50);   /* 中暖灰 */
+  --color-surface-500: oklch(60% 0.004 50);   /* 暖灰文字 */
+  --color-surface-900: oklch(15% 0.008 50);   /* 深暖灰 */
+
+  /* ========== 间距 Token ========== */
+  --space-section: clamp(48px, 8vw, 96px);  /* 区域分离 */
+  --space-group: clamp(24px, 4vw, 48px);    /* 分组分离 */
+  --space-item: clamp(12px, 2vw, 24px);     /* 元素间距 */
+  --space-tight: clamp(6px, 1vw, 12px);      /* 紧凑分组 */
+
+  /* ========== V7: 背景图案 Token ========== */
+  --bg-grid-size: 40px;
+  --bg-grid-opacity: 0.2;
+  --bg-glow-size: 600px;
+  --bg-glow-offset-x: 20%;
+  --bg-glow-offset-y: -10%;
+
+  /* ========== V7: 模式光晕色 ========== */
+  --glow-reading: oklch(90% 0.12 145);  /* 绿 */
+  --glow-training: oklch(90% 0.12 50);    /* 橙 */
+
+  /* ========== V7: 装饰色 ========== */
+  --decoration-glow: oklch(90% 0.12 145);
+
+  /* ========== V7: 卡片 tint Token ========== */
+  --card-tint-hover: 0.3;
+  --card-tint-selected: 1.0;
+
+  /* ========== V7: 庆祝动画 Token ========== */
+  --celebration-enabled: true;
+  --confetti-green-ratio: 0.6;
+  --confetti-orange-ratio: 0.3;
+  --confetti-teal-ratio: 0.1;
+  --celebration-duration: 1.2s;
+}
+
+/* ========== 浏览器兼容性回退 ========== */
+/* OKLCH 现代浏览器支持度：Chrome 111+, Safari 15.4+, Firefox 113+ */
+/* 回退方案：使用 @supports，旧版浏览器使用 RGB 等效颜色 */
+@supports not (color: oklch(0% 0 0)) {
+  :root {
+    --color-primary: #58CC02;
+    --color-primary-hover: #46A302;
+    --color-primary-light: #E8F8D5;
+    --color-primary-dark: #2E6F00;
+    --color-tertiary: #FF9500;
+    --color-tertiary-light: #FFF0CC;
+    --color-tertiary-dark: #CC7700;
+    --color-accent: #4A90E2;
+    --color-accent-light: #EBF3FF;
+    --color-success: #58CC02;
+    --color-danger: #FF4B4B;
+    --color-danger-hover: #E63939;
+    --color-warning: #FFC800;
+    --color-warning-light: #FFF7D6;
+    --color-info: #4A90E2;
+    --color-primary-hover-light: rgba(88,204,2,0.15);
+    --color-surface-50: #FFFAF5;
+    --color-surface-100: #F5F0E8;
+    --color-surface-200: #EAE0D0;
+    --color-surface-500: #6B6050;
+    --color-surface-900: #2A2015;
+  }
+}

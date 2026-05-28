@@ -50,7 +50,7 @@ export function PracticePage() {
   }, [nextQuestion]);
 
   return (
-    <div className="min-h-screen bg-grid-pattern">
+    <div className="min-h-screen bg-[var(--color-surface-50)]">
       <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
         {/* Compact header with topic nav and question position */}
         <header className="mb-6">
@@ -135,9 +135,9 @@ export function PracticePage() {
                   key={question.id}
                   type="button"
                   onClick={() => setSelectedQuestionId(question.id)}
-                  className={`text-left px-4 py-3 rounded-xl text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] hover:scale-102 hover-shadow-lg
+                  className={`text-left px-4 py-3 rounded-xl text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]
                     ${selectedQuestionId === question.id
-                      ? 'card-tint-selected shadow-md'
+                      ? 'card-tint-selected shadow-sm'
                       : 'bg-white text-gray-700 hover:bg-gray-100 shadow-sm ring-1 ring-gray-900/5'
                     }`}
                 >
@@ -151,16 +151,13 @@ export function PracticePage() {
           <main className="flex-1 min-w-0">
             {selectedQuestion ? (
               <div className="space-y-6">
+                <p className="text-xs text-gray-400">PracticePage: question #{selectedQuestion.id}, chunks: {answer?.chunks.length ?? 0}</p>
                 <ArticleView
                   key={selectedQuestion.id}
                   question={selectedQuestion}
                   chunks={answer?.chunks ?? []}
                   activeIndex={activeIndex}
                   onActiveIndexChange={setActiveIndex}
-                  progress={activeIndex !== null && answer?.chunks.length
-                    ? Math.round((activeIndex + 1) / answer.chunks.length * 100)
-                    : 0
-                  }
                 />
               </div>
             ) : (
@@ -201,9 +198,9 @@ export function PracticePage() {
                   setSelectedQuestionId(question.id);
                   setBottomSheetOpen(false);
                 }}
-                className={`text-left px-4 py-3 rounded-xl text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] hover:scale-102 hover-shadow-lg
+                className={`text-left px-4 py-3 rounded-xl text-sm transition-all duration-200 cursor-pointer active:scale-[0.98]
                   ${selectedQuestionId === question.id
-                    ? 'card-tint-selected shadow-md'
+                    ? 'card-tint-selected shadow-sm'
                     : 'bg-white text-gray-700 hover:bg-[var(--color-surface-100)] shadow-sm'
                   }`}
               >
