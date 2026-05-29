@@ -35,10 +35,16 @@
   --color-surface-900: oklch(15% 0.008 50);   /* 深暖灰 */
 
   /* ========== 间距 Token ========== */
-  --space-section: clamp(48px, 8vw, 96px);  /* 区域分离 */
-  --space-group: clamp(24px, 4vw, 48px);    /* 分组分离 */
-  --space-item: clamp(12px, 2vw, 24px);     /* 元素间距 */
-  --space-tight: clamp(6px, 1vw, 12px);      /* 紧凑分组 */
+  --spacing-section: clamp(48px, 8vw, 96px);  /* 区域分离 - Section */
+  --spacing-group: clamp(24px, 4vw, 48px);    /* 分组分离 - Group */
+  --spacing-item: clamp(12px, 2vw, 24px);     /* 元素间距 - Item */
+  --spacing-tight: clamp(6px, 1vw, 12px);     /* 紧凑分组 - Tight */
+
+  /* Legacy aliases (for compatibility) */
+  --space-section: var(--spacing-section);
+  --space-group: var(--spacing-group);
+  --space-item: var(--spacing-item);
+  --space-tight: var(--spacing-tight);
 
   /* ========== V7: 背景图案 Token ========== */
   --bg-grid-size: 40px;
@@ -64,6 +70,24 @@
   --confetti-orange-ratio: 0.3;
   --confetti-teal-ratio: 0.1;
   --celebration-duration: 1.2s;
+
+  /* ========== V8: Animation Duration Tokens ========== */
+  --transition-duration: 200ms;
+  --celebration-duration: 1200ms;
+
+  /* ========== V8: Focus Ring Tokens ========== */
+  --focus-ring-offset: 3px;
+  --focus-ring-color: var(--color-accent-light);
+}
+
+/* ========== V8: Reduced Motion Support ========== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ========== 浏览器兼容性回退 ========== */
