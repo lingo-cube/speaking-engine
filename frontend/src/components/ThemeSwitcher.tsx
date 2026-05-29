@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useTheme, Theme } from '../contexts/ThemeContext';
+import { Button } from './primitives';
 
 export function ThemeSwitcher() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-  }, [isDark]);
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <button
-      type="button"
-      onClick={() => setIsDark(!isDark)}
-      className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
-      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+    <Button
+      variant="secondary"
+      size="md"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${theme === 'default' ? 'Animal Island' : 'Default'} theme`}
+      aria-pressed={theme === 'animal-island'}
+      className="w-9 h-9 px-0"
     >
-      {isDark ? '☀' : '☾'}
-    </button>
+      {theme === 'default' ? '🌿' : '🦁'}
+    </Button>
   );
 }

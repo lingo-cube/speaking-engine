@@ -3,6 +3,7 @@
  */
 
 import type { ApiQuestion } from '../../types';
+import { Card, Text, Chip } from '../primitives';
 
 interface QuestionCardProps {
   question: ApiQuestion;
@@ -13,32 +14,28 @@ interface QuestionCardProps {
 
 export function QuestionCard({ question, index, isSelected, onClick }: QuestionCardProps) {
   return (
-    <button
-      type="button"
+    <Card
+      variant="default"
+      padding="tight"
+      isClickable
+      isSelected={isSelected}
       onClick={onClick}
-      className={`text-left transition-all duration-200 active:scale-[0.98] px-5 py-4 rounded-xl
-        ${isSelected
-          ? 'bg-sky-500 text-white shadow-md'
-          : 'bg-white text-gray-800 shadow-sm ring-1 ring-black/5 hover:shadow-md'
-        }`}
+      className="active:scale-[0.98]"
     >
-      {/* Question number badge */}
+      {/* Question number badge and text */}
       <div className="flex items-start gap-3">
-        <span
-          className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium flex-shrink-0
-            ${isSelected
-              ? 'bg-white/20 text-white'
-              : 'bg-sky-100 text-sky-700'
-            }`}
+        <Chip
+          size="sm"
+          variant={isSelected ? 'primary' : 'outline'}
+          className={isSelected ? 'bg-white/20 text-white border-transparent' : ''}
         >
           {index + 1}
-        </span>
+        </Chip>
 
-        {/* Question text */}
-        <span className="text-sm font-medium line-clamp-2 font-sans">
+        <Text variant="body" className="text-sm font-medium line-clamp-2">
           {question.question}
-        </span>
+        </Text>
       </div>
-    </button>
+    </Card>
   );
 }

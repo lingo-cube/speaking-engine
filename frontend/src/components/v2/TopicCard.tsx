@@ -3,6 +3,7 @@
  */
 
 import type { ApiTopic } from '../../types';
+import { Card, Text, Label } from '../primitives';
 
 interface TopicCardProps {
   topic: ApiTopic;
@@ -14,7 +15,7 @@ export function TopicCard({ topic, questionCount, onClick }: TopicCardProps) {
   // Category icon
   const CategoryIcon = () => (
     <svg
-      className="w-6 h-6 text-sky-500"
+      className="w-6 h-6 text-[var(--color-accent)]"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -35,31 +36,31 @@ export function TopicCard({ topic, questionCount, onClick }: TopicCardProps) {
   );
 
   return (
-    <button
-      type="button"
+    <Card
+      variant="elevated"
+      padding="normal"
+      isClickable
       onClick={onClick}
-      className="bg-white rounded-xl shadow-sm ring-1 ring-black/5 p-6 text-left transition-all duration-200 hover:shadow-md active:scale-[0.98] cursor-pointer"
+      className="hover:shadow-md active:scale-[0.98]"
     >
       {/* Icon and name */}
       <div className="flex items-center gap-4 mb-4">
-        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-sky-50">
+        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--color-accent-light)]">
           <CategoryIcon />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold truncate text-gray-900 font-sans">
-            {topic.name}
-          </h3>
-          <p className="text-sm text-gray-500">
+          <Text variant="title-sm" className="truncate">{topic.name}</Text>
+          <Text variant="body" color="secondary" className="text-sm">
             {topic.category.toUpperCase()}
-          </p>
+          </Text>
         </div>
       </div>
 
       {/* Question count */}
-      <div className="flex items-center gap-2 text-sm text-gray-500">
+      <div className="flex items-center gap-2 text-sm text-[var(--color-surface-500)]">
         <QuestionIcon />
         <span>{questionCount} questions</span>
       </div>
-    </button>
+    </Card>
   );
 }

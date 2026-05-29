@@ -27,6 +27,8 @@ interface CardProps {
   className?: string;
   children: React.ReactNode;
   onClick?: () => void;
+  showProgressBand?: boolean;
+  progressPercent?: number;
   'aria-label'?: string;
   'aria-pressed'?: boolean;
   'aria-describedby'?: string;
@@ -63,6 +65,8 @@ export function Card({
   className = '',
   children,
   onClick,
+  showProgressBand = false,
+  progressPercent = 0,
   'aria-label': ariaLabel,
   'aria-pressed': ariaPressed,
   'aria-describedby': ariaDescribedby,
@@ -82,29 +86,44 @@ export function Card({
 
   const classes = `${baseClasses} ${stateClassesToAdd} ${interactiveClasses} ${className}`.trim();
 
+  const progressBand = showProgressBand ? (
+    <div
+      className="progress-band absolute top-0 left-0 rounded-t-2xl"
+      style={{ width: `${progressPercent}%` }}
+      aria-hidden="true"
+    />
+  ) : null;
+
+  const cardContent = (
+    <>
+      {progressBand}
+      {children}
+    </>
+  );
+
   if (isClickable && onClick) {
     return (
       <button
         type="button"
-        className={classes}
+        className={`relative ${classes}`}
         onClick={onClick}
         disabled={isDisabled}
         aria-label={ariaLabel}
         aria-pressed={ariaPressed ?? isSelected}
         aria-describedby={ariaDescribedby}
       >
-        {children}
+        {cardContent}
       </button>
     );
   }
 
   return (
     <div
-      className={classes}
+      className={`relative ${classes}`}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedby}
     >
-      {children}
+      {cardContent}
     </div>
   );
 }

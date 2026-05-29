@@ -1,4 +1,5 @@
 import type { ApiTopic } from '../types';
+import { Card, Text, Label } from './primitives';
 
 interface TopicCardProps {
   topic: ApiTopic;
@@ -8,17 +9,16 @@ interface TopicCardProps {
 
 export function TopicCard({ topic, onClick, isSelected }: TopicCardProps) {
   return (
-    <button
-      type="button"
+    <Card
+      variant="default"
+      padding="normal"
+      isClickable
+      isSelected={isSelected}
       onClick={onClick}
-      className={`w-full text-left rounded-2xl p-5 transition-all duration-200 ease-out-200 cursor-pointer hover:scale-102 hover-shadow-lg
-        ${isSelected
-          ? 'card-tint-selected shadow-md'
-          : 'bg-white shadow-sm hover:card-tint-hover ring-1 ring-[var(--color-surface-200)]'
-        }`}
+      className="hover:scale-102"
     >
-      <h3 className="text-base font-semibold text-gray-900 mb-1">{topic.name}</h3>
-      <p className="text-xs text-gray-500 uppercase tracking-wider">{topic.category}</p>
-    </button>
+      <Text variant="body" className="font-semibold">{topic.name}</Text>
+      <Label>{topic.category}</Label>
+    </Card>
   );
 }
